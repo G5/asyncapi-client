@@ -1,0 +1,3 @@
+class OnSuccess
+
+end

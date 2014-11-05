@@ -1,0 +1,3 @@
+class OnQueue
+
+end
