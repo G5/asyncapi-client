@@ -10,7 +10,7 @@ require "factory_girl"
 require "database_cleaner"
 require "pry"
 
-[
+Dir[
   File.join(SPEC_DIR, "support", "**", "*.rb"),
   File.join(SPEC_DIR, "factories", "*.rb"),
   File.join(SPEC_DIR, "fixtures", "*.rb"),
