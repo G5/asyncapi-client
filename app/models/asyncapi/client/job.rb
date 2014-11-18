@@ -2,7 +2,7 @@ module Asyncapi::Client
   class Job < ActiveRecord::Base
 
     enum status: %i[queued success error]
-    store :headers, coder: JSON
+    serialize :headers, Hash
 
     def self.post(url, headers: nil, body: nil,
                   on_queue: nil, on_success: nil, on_error: nil,

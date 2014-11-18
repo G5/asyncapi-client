@@ -84,3 +84,17 @@ end
 ```
 
 This project rocks and uses MIT-LICENSE.
+
+If you use `protected_attributes`, you need to whitelist attributes. In an initializer:
+
+```ruby
+Asyncapi::Client::Job.attr_accessible(
+  :follow_up_at,
+  :time_out_at,
+  :on_queue,
+  :on_success,
+  :on_error,
+  :headers,
+  :body,
+)
+```

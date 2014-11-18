@@ -50,6 +50,7 @@ module Asyncapi::Client
     end
 
     describe ".post" do
+      before { Timecop.freeze }
       subject(:post) { described_class.post(server_url, post_params) }
 
       let(:post_params) do
@@ -63,26 +64,24 @@ module Asyncapi::Client
           time_out: time_out
         }
       end
-      let(:follow_up) { double(:follow_up, from_now: '5 mins from now') }
-      let(:time_out) { double(:time_out, from_now: '30 mins from now') }
+      let(:follow_up) { 5.minutes }
+      let(:time_out) { 30.minutes }
       let(:server_url)  { "http://server_url.com" }
-      let(:job) { double(Job, id: 1)}
 
       it "creates a job and delegates it to a JobPostWorker" do
-        expect(described_class).to receive(:create).
-          with(hash_including({
-          follow_up_at: follow_up.from_now,
-          time_out_at: time_out.from_now,
-          on_queue: "QueuedJobWorker",
-          on_success: "SuccessfulJobWorker",
-          on_error: "FailedJobWorker",
-          body: '{"json": "object"}',
-          headers: {"CONTENT_TYPE" => "application/json"}
-        })).and_return job
-
-        expect(Asyncapi::Client::JobPostWorker).to receive(:perform_async).
-          with(job.id, server_url)
         post
+
+        job = described_class.last
+
+        expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
+
+        expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
+        expect(job.time_out_at.to_i).to eq time_out.from_now.to_i
+        expect(job.on_queue).to eq "QueuedJobWorker"
+        expect(job.on_success).to eq "SuccessfulJobWorker"
+        expect(job.on_error).to eq "FailedJobWorker"
+        expect(job.body).to eq '{"json": "object"}'
+        expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
       end
 
     end
@@ -94,6 +93,13 @@ module Asyncapi::Client
     it do
       expected_url = "http://test.com/asyncapi/client/v1/jobs/#{job.id}"
       is_expected.to include(expected_url)
+    end
+  end
+
+  describe "#headers" do
+    it "allows retrieval of headers" do
+      job = create(:asyncapi_client_job, headers: {"CONTENT-TYPE" => "wow"})
+      expect(job.reload.headers).to match({"CONTENT-TYPE" => "wow"})
     end
   end
 
