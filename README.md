@@ -66,7 +66,12 @@ rake asyncapi_client:install:migrations
 rake db:migrate
 ```
 
-`Rails.application.routes.default_url_options[:host]` needs to be set
+Make sure you have `:host` in the `default_url_options` set up for your server. Example `config/initializers/default_url_options.rb`:
+
+```ruby
+Rails.application.routes.default_url_options ||= {}
+Rails.application.routes.default_url_options[:host] = ENV["HOST"]
+```
 
 ## Optional:
 
