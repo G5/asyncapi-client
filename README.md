@@ -1,6 +1,6 @@
 # Asyncapi::Client
 
-Asyncapi::Client is a Rails engine that easily allows asynchronous communication with a Asyncapi::Server-based API server.
+Asyncapi::Client is a Rails engine that easily allows asynchronous communication with a [Asyncapi::Server](https://github.com/G5/asyncapi-server)-based API server.
 
 This avoids typing up your web servers executing long running processes. Scaling typically requires more workers.
 
