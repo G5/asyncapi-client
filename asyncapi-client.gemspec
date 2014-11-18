@@ -9,7 +9,7 @@ Gem::Specification.new do |s|
   s.version     = Asyncapi::Client::VERSION
   s.authors     = ["G5", "Marc Ignacio", "Ramon Tayag"]
   s.email       = ["lateam@getg5.com", "marcrendlignacio@gmail.com", "ramon.tayag@gmail.com"]
-  s.homepage    = "http://github.com/g5search/noneyet"
+  s.homepage    = "https://github.com/G5/asyncapi-client"
   s.summary     = "Asynchronous API communication"
   s.description = "Asynchronous API communication"
   s.license     = "MIT"
