@@ -7,8 +7,8 @@ require "asyncapi/client/version"
 Gem::Specification.new do |s|
   s.name        = "asyncapi-client"
   s.version     = Asyncapi::Client::VERSION
-  s.authors     = ["Marc Ignacio", "Ramon Tayag"]
-  s.email       = ["marc@aelogica.com", "ramon@aelogica.com"]
+  s.authors     = ["G5", "Marc Ignacio", "Ramon Tayag"]
+  s.email       = ["lateam@getg5.com", "marcrendlignacio@gmail.com", "ramon.tayag@gmail.com"]
   s.homepage    = "http://github.com/g5search/noneyet"
   s.summary     = "Asynchronous API communication"
   s.description = "Asynchronous API communication"
