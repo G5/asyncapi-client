@@ -106,6 +106,12 @@ Asyncapi::Client::Job.attr_accessible(
 )
 ```
 
+If you use FactoryGirl, you can require the factories for easy testing and stubbing:
+
+```ruby
+require "asyncapi/client/factories"
+```
+
 ## License
 
 Copyright (c) 2014 G5

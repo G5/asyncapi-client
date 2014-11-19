@@ -14,7 +14,7 @@ Gem::Specification.new do |s|
   s.description = "Asynchronous API communication"
   s.license     = "MIT"
 
-  s.files = Dir["{app,config,db,lib}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
+  s.files = Dir["{app,config,db,lib,spec/factories}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
   s.add_dependency "rails", "~> 4.1.5"
   s.add_dependency "sidekiq"
