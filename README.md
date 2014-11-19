@@ -8,7 +8,7 @@ This avoids typing up your web servers executing long running processes. Scaling
 
 To communicate with the server (in the spirit of running things in the background, call the following from a worker):
 
-```
+```ruby
 Asyncapi::Client::Job.post(
   "http://server.com/long/running/process",
   # Options below are optional
@@ -20,27 +20,36 @@ Asyncapi::Client::Job.post(
 )
 ```
 
-Each of the `on_*` classes will get executed. For example, when the job is queued on the server, `DoOnQueue.call` will get called with the `Asyncapi::Client::Job` instance passed in. Example:
+Each of the `on_*` classes will get executed. For example, when the job is queued on the server, `DoOnQueue#call` will get called with the `Asyncapi::Client::Job` instance passed in. Example:
 
-```
-class DoOnQueue
-  def self.call(job)
+```ruby
+class DoOnQueue < Asyncapi::Client::CallbackRunner
+  def call
+    # you have access to: job, callback_params
     Rails.logger.info "Job##{job.id} successfully queued with body: #{job.body}"
   end
 end
 
-class DoOnSuccess
-  def self.call(job)
+class DoOnSuccess < Asyncapi::Client::CallbackRunner
+  def self.call
     Rails.logger.info "Job##{job.id} is done. The server's response: #{job.message}"
   end
 end
 
-class DoOnError
-  def self.call(job)
+class DoOnError < Asyncapi::Client::CallbackRunner
+  def call
+    # you have access to: job and it fields: callback_params, :body, :headers, :message
     Rails.logger.info "Job##{job.id} failed. The server's response: #{job.message}"
   end
 end
 ```
+
+In the callback classes, you have access to the `job` and its fields (directly):
+
+- `callback_params`
+- `body`
+- `headers`
+- `message`
 
 Currently, this Engine only works with [Sidekiq](http://sidekiq.org), [typhoeus](https://github.com/typhoeus/typhoeus), and [kaminari](https://github.com/amatsuda/kaminari). Customizing these can be introduced as needed.
 

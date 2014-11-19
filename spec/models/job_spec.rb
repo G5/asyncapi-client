@@ -61,12 +61,14 @@ module Asyncapi::Client
           on_success: "SuccessfulJobWorker",
           on_error: "FailedJobWorker",
           follow_up: follow_up,
-          time_out: time_out
+          time_out: time_out,
+          callback_params: callback_params,
         }
       end
       let(:follow_up) { 5.minutes }
       let(:time_out) { 30.minutes }
       let(:server_url)  { "http://server_url.com" }
+      let(:callback_params) { {callback: "params"} }
 
       it "creates a job and delegates it to a JobPostWorker" do
         post
@@ -80,6 +82,7 @@ module Asyncapi::Client
         expect(job.on_queue).to eq "QueuedJobWorker"
         expect(job.on_success).to eq "SuccessfulJobWorker"
         expect(job.on_error).to eq "FailedJobWorker"
+        expect(job.callback_params).to eq({callback: "params"})
         expect(job.body).to eq '{"json": "object"}'
         expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
       end

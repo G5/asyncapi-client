@@ -3,9 +3,11 @@ module Asyncapi::Client
 
     enum status: %i[queued success error]
     serialize :headers, Hash
+    serialize :callback_params, Hash
 
     def self.post(url, headers: nil, body: nil,
                   on_queue: nil, on_success: nil, on_error: nil,
+                  callback_params: {},
                   follow_up: 5.minutes, time_out: 30.minutes)
       job = create(
         follow_up_at: follow_up.from_now,
@@ -13,6 +15,7 @@ module Asyncapi::Client
         on_queue: on_queue,
         on_success: on_success,
         on_error: on_error,
+        callback_params: callback_params,
         headers: headers,
         body: body,
       )
