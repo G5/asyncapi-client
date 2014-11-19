@@ -57,9 +57,9 @@ module Asyncapi::Client
         {
           headers: {"CONTENT_TYPE" => "application/json"},
           body: '{"json": "object"}',
-          on_queue: "QueuedJobWorker",
-          on_success: "SuccessfulJobWorker",
-          on_error: "FailedJobWorker",
+          on_queue: OnQueue,
+          on_success: OnSuccess,
+          on_error: OnError,
           follow_up: follow_up,
           time_out: time_out,
           callback_params: callback_params,
@@ -79,15 +79,23 @@ module Asyncapi::Client
 
         expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
         expect(job.time_out_at.to_i).to eq time_out.from_now.to_i
-        expect(job.on_queue).to eq "QueuedJobWorker"
-        expect(job.on_success).to eq "SuccessfulJobWorker"
-        expect(job.on_error).to eq "FailedJobWorker"
+        expect(job.on_queue).to eq "OnQueue"
+        expect(job.on_success).to eq "OnSuccess"
+        expect(job.on_error).to eq "OnError"
         expect(job.callback_params).to eq({callback: "params"})
         expect(job.body).to eq '{"json": "object"}'
         expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
       end
 
     end
+
+    [:on_queue, :on_error, :on_success].each do |attr|
+      it "can set `#{attr}` using a class name" do
+        job = build_stubbed(:asyncapi_client_job, attr => OnError)
+        expect(job.send(attr)).to eq "OnError"
+      end
+    end
+
   end
 
   describe "#url" do

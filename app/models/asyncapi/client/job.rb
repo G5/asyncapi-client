@@ -31,5 +31,11 @@ module Asyncapi::Client
       write_attribute :body, json
     end
 
+    [:on_success, :on_error, :on_queue].each do |attr|
+      define_method("#{attr}=") do |klass|
+        write_attribute attr, klass.to_s
+      end
+    end
+
   end
 end
