@@ -59,6 +59,8 @@ There is a feed of all jobs that can be accessed via `/asyncapi/client/v1/jobs.j
 
 # Installation
 
+**Note**: if you're using the `protected_attributes`, also see the "Optional" section below.
+
 ## Required
 
 Add the gem to the Gemfile:
