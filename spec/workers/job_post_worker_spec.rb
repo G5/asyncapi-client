@@ -13,7 +13,7 @@ module Asyncapi::Client
     let(:headers) { {my: "head"} }
     let(:server_url) { "server.url" }
     let(:server_params) do
-      { job: { callback_url: job.url, params: body } }
+      { job: { callback_url: job.url, params: body, secret: job.secret } }
     end
 
     before do

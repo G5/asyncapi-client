@@ -36,6 +36,7 @@ module Asyncapi::Client
         job: {
           callback_url: job.url,
           params: params,
+          secret: job.secret,
         }
       }
     end

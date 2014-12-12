@@ -1,6 +1,8 @@
 module Asyncapi::Client
   class Job < ActiveRecord::Base
 
+    after_initialize :generate_secret
+
     enum status: %i[queued success error]
     serialize :headers, Hash
     serialize :callback_params, Hash
@@ -35,6 +37,12 @@ module Asyncapi::Client
       define_method("#{attr}=") do |klass|
         write_attribute attr, klass.to_s
       end
+    end
+
+    private
+
+    def generate_secret
+      self.secret ||= SecureRandom.uuid
     end
 
   end

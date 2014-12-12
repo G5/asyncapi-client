@@ -114,6 +114,10 @@ If you use FactoryGirl, you can require the factories for easy testing and stubb
 require "asyncapi/client/factories"
 ```
 
+## Security
+
+`asyncapi-client` generates a secret for the job using `SecureRandom.uuid`, and sends this to the app using `asyncapi-server`. The server app, using the latest compatible gem, will reply with the secret in the params. `asyncapi-client` will make sure the job id matches with the given secret.
+
 ## License
 
 Copyright (c) 2014 G5

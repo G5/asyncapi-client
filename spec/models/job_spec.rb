@@ -114,4 +114,14 @@ module Asyncapi::Client
     end
   end
 
+  describe "#secret" do
+    it "always generates a secret" do
+      job = build(:asyncapi_client_job)
+      expect(job.secret).to be_present
+      initial_secret = job.secret
+      job.save
+      expect(job.reload.secret).to eq initial_secret
+    end
+  end
+
 end

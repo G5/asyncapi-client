@@ -18,9 +18,9 @@ module Asyncapi
     end
 
     describe ".parent_controller" do
-      it "defaults to ApplicationController if nil" do
+      it "defaults to ActionController::Base if nil" do
         described_class.parent_controller = nil
-        expect(described_class.parent_controller).to eq ApplicationController
+        expect(described_class.parent_controller).to eq ActionController::Base
       end
     end
 

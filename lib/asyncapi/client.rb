@@ -2,6 +2,7 @@ require "sidekiq"
 require "api-pagination"
 require "typhoeus"
 require "asyncapi/client/engine"
+require "securerandom"
 
 module Asyncapi
   module Client
@@ -14,7 +15,7 @@ module Asyncapi
     end
 
     def self.parent_controller
-      @@parent_controller || ApplicationController
+      @@parent_controller || ActionController::Base
     end
 
   end

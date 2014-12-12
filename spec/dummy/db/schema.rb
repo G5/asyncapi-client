@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20141119011011) do
+ActiveRecord::Schema.define(version: 20141212064445) do
 
   create_table "asyncapi_client_jobs", force: true do |t|
     t.string   "server_job_url"
@@ -27,6 +27,7 @@ ActiveRecord::Schema.define(version: 20141119011011) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "callback_params"
+    t.string   "secret"
   end
 
 end
