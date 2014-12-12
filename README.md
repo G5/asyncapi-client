@@ -105,6 +105,7 @@ Asyncapi::Client::Job.attr_accessible(
   :on_error,
   :headers,
   :body,
+  :status,
 )
 ```
 
