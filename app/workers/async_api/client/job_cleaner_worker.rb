@@ -17,6 +17,7 @@ module Asyncapi
       def destroy_remote(job)
         Typhoeus.delete(job.server_job_url, {
           params: { secret: job.secret },
+          headers: job.headers,
         })
       end
 

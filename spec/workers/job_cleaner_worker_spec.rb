@@ -13,7 +13,10 @@ module Asyncapi
           let(:job) do
             build_stubbed(:asyncapi_client_job, {
               server_job_url: "https://server.com/123",
-              secret: "sekret"
+              secret: "sekret",
+              headers: {
+                AUTHORIZATION: "Bearer xyz",
+              }
             })
           end
 
@@ -25,7 +28,8 @@ module Asyncapi
 
           it "deletes the remote job and deletes the given job" do
             expect(Typhoeus).to receive(:delete).with("https://server.com/123", {
-              params: { secret: "sekret" }
+              params: { secret: "sekret" },
+              headers: {AUTHORIZATION: "Bearer xyz"},
             }).and_return(response)
             expect(job).to receive(:destroy)
 
