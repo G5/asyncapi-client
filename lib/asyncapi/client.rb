@@ -7,8 +7,9 @@ require "securerandom"
 module Asyncapi
   module Client
 
-    CONFIG_ATTRS = [:parent_controller]
+    CONFIG_ATTRS = [:parent_controller, :expiry_threshold]
     mattr_accessor(*CONFIG_ATTRS)
+    self.expiry_threshold = 10.days
 
     def self.configure
       yield self

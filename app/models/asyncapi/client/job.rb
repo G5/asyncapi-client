@@ -2,10 +2,13 @@ module Asyncapi::Client
   class Job < ActiveRecord::Base
 
     after_initialize :generate_secret
+    before_create :set_expired_at
 
     enum status: %i[queued success error]
     serialize :headers, Hash
     serialize :callback_params, Hash
+
+    scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
 
     def self.post(url, headers: nil, body: nil,
                   on_queue: nil, on_success: nil, on_error: nil,
@@ -22,6 +25,7 @@ module Asyncapi::Client
         body: body,
       )
       JobPostWorker.perform_async(job.id, url)
+      CleanerWorker.perform_async
     end
 
     def url
@@ -40,6 +44,10 @@ module Asyncapi::Client
     end
 
     private
+
+    def set_expired_at
+      self.expired_at ||= Asyncapi::Client.expiry_threshold.from_now
+    end
 
     def generate_secret
       self.secret ||= SecureRandom.uuid
