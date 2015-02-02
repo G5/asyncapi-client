@@ -32,6 +32,34 @@ module Asyncapi::Client
     its(:on_error) { is_expected.to eq "FailedJobWorker" }
     its(:headers) { is_expected.to eq({"CONTENT_TYPE" => "application/json"}) }
 
+    describe ".expired" do
+      it "returns jobs whose expired_at times are in the past" do
+        job_1 = create(:asyncapi_client_job, expired_at: 1.minute.from_now)
+        job_2 = create(:asyncapi_client_job, expired_at: 1.minute.ago)
+        job_3 = create(:asyncapi_client_job, expired_at: 1.minute.from_now)
+
+        expect(described_class.expired.pluck(:id)).
+          to match_array([job_2.id])
+      end
+    end
+
+    describe "#expired_at" do
+      let!(:old_value) { Asyncapi::Client.expiry_threshold }
+      before { Timecop.freeze }
+      after { Asyncapi::Client.expiry_threshold = old_value }
+
+      it "is set to the Asyncapi::Client.expiry_threshold" do
+        Asyncapi::Client.expiry_threshold = 12.days
+        job = create(:asyncapi_client_job)
+        expect(job.expired_at).to eq 12.days.from_now
+      end
+
+      it "honors if the attribute has already been set" do
+        job = create(:asyncapi_client_job, expired_at: 2.days.from_now)
+        expect(job.expired_at).to eq 2.days.from_now
+      end
+    end
+
     describe "#body=" do
       context "given json" do
         it "remains as json" do
@@ -70,12 +98,13 @@ module Asyncapi::Client
       let(:server_url)  { "http://server_url.com" }
       let(:callback_params) { {callback: "params"} }
 
-      it "creates a job and delegates it to a JobPostWorker" do
+      it "creates a job, delegates it to a JobPostWorker, and runs a cleanup job" do
         post
 
         job = described_class.last
 
         expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
+        expect(CleanerWorker).to have_enqueued_job
 
         expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
         expect(job.time_out_at.to_i).to eq time_out.from_now.to_i

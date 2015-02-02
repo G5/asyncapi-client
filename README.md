@@ -57,6 +57,18 @@ To run the application, you need to have the Sidekiq workers running as well.
 
 There is a feed of all jobs that can be accessed via `/asyncapi/client/v1/jobs.json`. You can pass `per_page` and `page` to paginate through the records. Pagination is done by [api-pagination](https://github.com/davidcelis/api-pagination) via kaminari.
 
+## Expiry
+
+To make space in the database, old jobs must be deleted. By default, jobs older than 10 days will be deleted in both the Asyncapi Client and Asyncapi Server. Asyncapi Client is responsible for deleting the jobs it no longer needs a response from on the server.
+
+By default, jobs 10 days old and older will be deleted. You can change this setting by putting this in an initializer:
+
+```ruby
+Asyncapi::Client.expiry_threshold = 5.days
+```
+
+If you don't ever want the jobs to get delete, set the threshold to `nil`.
+
 # Installation
 
 **Note**: if you're using the `protected_attributes`, also see the "Optional" section below.
