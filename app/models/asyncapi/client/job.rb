@@ -50,9 +50,8 @@ module Asyncapi::Client
                   follow_up: 5.minutes,
                   time_out: nil)
 
-      job = create(
+      args = {
         follow_up_at: follow_up.from_now,
-        time_out_at: time_out.from_now,
         on_queue: on_queue,
         on_success: on_success,
         on_error: on_error,
@@ -60,7 +59,9 @@ module Asyncapi::Client
         callback_params: callback_params,
         headers: headers,
         body: body,
-      )
+      }
+      args[:time_out_at] = time_out.from_now if time_out
+      job = create(args)
       JobPostWorker.perform_async(job.id, url)
       CleanerWorker.perform_async
     end
