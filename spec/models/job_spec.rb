@@ -177,6 +177,16 @@ module Asyncapi::Client
     end
   end
 
+  describe ".for_time_out" do
+    let!(:job_1) { create(:asyncapi_client_job, time_out_at: 1.minute.ago) }
+    let!(:job_2) { create(:asyncapi_client_job, time_out_at: 3.hours.from_now) }
+    let!(:job_3) { create(:asyncapi_client_job, time_out_at: nil) }
+
+    it "returns jobs that should be timed out" do
+      expect(Job.for_time_out).to match_array([job_1])
+    end
+  end
+
   describe "#status" do
     let(:job) { create(:asyncapi_client_job, status: nil) }
 

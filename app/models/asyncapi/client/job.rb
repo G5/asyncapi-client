@@ -35,6 +35,9 @@ module Asyncapi::Client
 
     scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
     scope :with_time_out, -> { where(arel_table[:time_out_at].not_eq(nil)) }
+    scope :for_time_out, -> do
+      with_time_out.where(arel_table[:time_out_at].lt(Time.now))
+    end
 
     def self.post(url,
                   headers: nil,
