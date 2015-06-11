@@ -3,6 +3,17 @@ require "spec_helper"
 module Asyncapi::Client
   describe Job do
 
+    describe "enum statuses" do
+      it "is listed" do
+        expect(described_class.statuses).to eq({
+          "queued"=>0,
+          "success"=>1,
+          "error"=>2,
+          "timed_out"=>3,
+        })
+      end
+    end
+
     subject(:job) { described_class.create(params) }
     let(:params) do
       {
@@ -88,6 +99,7 @@ module Asyncapi::Client
           on_queue: OnQueue,
           on_success: OnSuccess,
           on_error: OnError,
+          on_time_out: OnTimeOut,
           follow_up: follow_up,
           time_out: time_out,
           callback_params: callback_params,
@@ -111,6 +123,7 @@ module Asyncapi::Client
         expect(job.on_queue).to eq "OnQueue"
         expect(job.on_success).to eq "OnSuccess"
         expect(job.on_error).to eq "OnError"
+        expect(job.on_time_out).to eq "OnTimeOut"
         expect(job.callback_params).to eq({callback: "params"})
         expect(job.body).to eq '{"json": "object"}'
         expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
@@ -118,7 +131,7 @@ module Asyncapi::Client
 
     end
 
-    [:on_queue, :on_error, :on_success].each do |attr|
+    [:on_queue, :on_error, :on_success, :on_time_out].each do |attr|
       it "can set `#{attr}` using a class name" do
         job = build_stubbed(:asyncapi_client_job, attr => OnError)
         expect(job.send(attr)).to eq "OnError"

@@ -4,22 +4,30 @@ module Asyncapi::Client
     after_initialize :generate_secret
     before_create :set_expired_at
 
-    enum status: %i[queued success error]
+    enum status: %i[queued success error timed_out]
     serialize :headers, Hash
     serialize :callback_params, Hash
 
     scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
 
-    def self.post(url, headers: nil, body: nil,
-                  on_queue: nil, on_success: nil, on_error: nil,
+    def self.post(url,
+                  headers: nil,
+                  body: nil,
+                  on_queue: nil,
+                  on_success: nil,
+                  on_error: nil,
+                  on_time_out: nil,
                   callback_params: {},
-                  follow_up: 5.minutes, time_out: 30.minutes)
+                  follow_up: 5.minutes,
+                  time_out: nil)
+
       job = create(
         follow_up_at: follow_up.from_now,
         time_out_at: time_out.from_now,
         on_queue: on_queue,
         on_success: on_success,
         on_error: on_error,
+        on_time_out: on_time_out,
         callback_params: callback_params,
         headers: headers,
         body: body,
@@ -37,7 +45,7 @@ module Asyncapi::Client
       write_attribute :body, json
     end
 
-    [:on_success, :on_error, :on_queue].each do |attr|
+    [:on_success, :on_error, :on_queue, :on_time_out].each do |attr|
       define_method("#{attr}=") do |klass|
         write_attribute attr, klass.to_s
       end

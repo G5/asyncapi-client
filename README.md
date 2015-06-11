@@ -17,6 +17,8 @@ Asyncapi::Client::Job.post(
   on_success: DoOnSuccess,
   on_error: DoOnError,
   on_queue: DoOnQueue,
+  on_time_out: DoOnTimeOut,
+  time_out: 2.minutes # Defaults to nil (never time out)
 )
 ```
 
