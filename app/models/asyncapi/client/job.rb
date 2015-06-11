@@ -9,6 +9,7 @@ module Asyncapi::Client
     serialize :callback_params, Hash
 
     scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
+    scope :with_time_out, -> { where(arel_table[:time_out_at].not_eq(nil)) }
 
     def self.post(url,
                   headers: nil,

@@ -1,4 +1,5 @@
 require "sidekiq"
+require "sidetiq"
 require "api-pagination"
 require "typhoeus"
 require "asyncapi/client/engine"
