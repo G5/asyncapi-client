@@ -3,6 +3,18 @@ require "spec_helper"
 module Asyncapi::Client
   describe Job do
 
+    describe "enum statuses" do
+      it "is listed" do
+        expect(described_class.statuses).to eq({
+          "queued"=>0,
+          "success"=>1,
+          "error"=>2,
+          "timed_out"=>3,
+          "fresh" => 4,
+        })
+      end
+    end
+
     subject(:job) { described_class.create(params) }
     let(:params) do
       {
@@ -88,6 +100,7 @@ module Asyncapi::Client
           on_queue: OnQueue,
           on_success: OnSuccess,
           on_error: OnError,
+          on_time_out: OnTimeOut,
           follow_up: follow_up,
           time_out: time_out,
           callback_params: callback_params,
@@ -111,6 +124,7 @@ module Asyncapi::Client
         expect(job.on_queue).to eq "OnQueue"
         expect(job.on_success).to eq "OnSuccess"
         expect(job.on_error).to eq "OnError"
+        expect(job.on_time_out).to eq "OnTimeOut"
         expect(job.callback_params).to eq({callback: "params"})
         expect(job.body).to eq '{"json": "object"}'
         expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
@@ -118,7 +132,7 @@ module Asyncapi::Client
 
     end
 
-    [:on_queue, :on_error, :on_success].each do |attr|
+    [:on_queue, :on_error, :on_success, :on_time_out].each do |attr|
       it "can set `#{attr}` using a class name" do
         job = build_stubbed(:asyncapi_client_job, attr => OnError)
         expect(job.send(attr)).to eq "OnError"
@@ -150,6 +164,74 @@ module Asyncapi::Client
       initial_secret = job.secret
       job.save
       expect(job.reload.secret).to eq initial_secret
+    end
+  end
+
+  describe ".with_time_out" do
+    let!(:job_1) { create(:asyncapi_client_job, time_out_at: 1.minute.ago) }
+    let!(:job_2) { create(:asyncapi_client_job, time_out_at: 3.hours.from_now) }
+    let!(:job_3) { create(:asyncapi_client_job, time_out_at: nil) }
+
+    it "returns the job that have `time_out_at` set" do
+      expect(Job.with_time_out).to match_array([job_1, job_2])
+    end
+  end
+
+  describe ".for_time_out" do
+    let!(:job_1) { create(:asyncapi_client_job, time_out_at: 1.minute.ago) }
+    let!(:job_2) { create(:asyncapi_client_job, time_out_at: 3.hours.from_now) }
+    let!(:job_3) { create(:asyncapi_client_job, time_out_at: nil) }
+
+    it "returns jobs that should be timed out" do
+      expect(Job.for_time_out).to match_array([job_1])
+    end
+  end
+
+  describe "#status" do
+    let(:job) { create(:asyncapi_client_job, status: nil) }
+
+    before do
+      job.reload # http://stackoverflow.com/a/15963359
+    end
+
+    it "starts with `fresh`" do
+      expect(job.reload.status).to eq "fresh"
+      expect(job).to be_fresh
+    end
+  end
+
+  describe "#status", "transitions" do
+    context "from `fresh`" do
+      let(:job) { create(:asyncapi_client_job, status: "fresh") }
+
+      it "executes `#queue!` to go from `fresh` to `queued`" do
+        job.enqueue!
+        expect(job).to be_queued
+      end
+
+      it "executes `#time_out!` to go from `fresh` to `timed_out`" do
+        job.time_out!
+        expect(job).to be_timed_out
+      end
+    end
+
+    context "from `queued`" do
+      let(:job) { create(:asyncapi_client_job, status: "queued") }
+
+      it "executes `#succeed!` to go from `queued` to `success`" do
+        job.succeed!
+        expect(job).to be_success
+      end
+
+      it "executes `#error!` to go from `queued` to `error`" do
+        job.fail!
+        expect(job).to be_error
+      end
+
+      it "executes `#time_out` to go from `queued` to `timed_out`" do
+        job.time_out!
+        expect(job).to be_timed_out
+      end
     end
   end
 

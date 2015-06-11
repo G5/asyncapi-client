@@ -1,6 +1,8 @@
 require "sidekiq"
+require "sidetiq"
 require "api-pagination"
 require "typhoeus"
+require 'aasm'
 require "asyncapi/client/engine"
 require "securerandom"
 

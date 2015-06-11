@@ -9,14 +9,8 @@ module Asyncapi::Client
       end
 
       def update
-        job = Job.find_by(id: params[:id], secret: params[:job][:secret])
-        if job
-          job.assign_attributes(job_params)
-          if job.status_changed? && job.save
-            JobStatusWorker.perform_async(job.id)
-          else
-            job.save
-          end
+        if job = Job.find_by(id: params[:id], secret: params[:job][:secret])
+          UpdateJob.execute(job: job, params: job_params)
           respond_with job
         else
           render nothing: true, status: 403

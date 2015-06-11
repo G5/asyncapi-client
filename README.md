@@ -17,8 +17,12 @@ Asyncapi::Client::Job.post(
   on_success: DoOnSuccess,
   on_error: DoOnError,
   on_queue: DoOnQueue,
+  on_time_out: DoOnTimeOut,
+  time_out: 2.minutes # Defaults to nil (never time out)
 )
 ```
+
+*Jobs that should be timed out are marked as `timed_out` approximately every minute.*
 
 Each of the `on_*` classes will get executed. For example, when the job is queued on the server, `DoOnQueue#call` will get called with the `Asyncapi::Client::Job` instance passed in. Example:
 
