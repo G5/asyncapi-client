@@ -10,7 +10,7 @@ module Asyncapi::Client
 
     def perform
       Job.with_time_out.find_each do |job|
-        time_out_job(job) if job.time_out_at < Time.now && job.status.blank?
+        time_out_job(job) if job.time_out_at < Time.now && job.may_time_out?
       end
     end
 

@@ -38,54 +38,21 @@ module Asyncapi::Client
           end
         end
 
-        context "job status changes" do
-          context "job is valid" do
-            let(:job_params) do
-              {
-                status: "success",
-                message: "Great success",
-                secret: job.secret,
-              }
-            end
-
-            it "performs JobStatusWorker" do
-              expect(JobStatusWorker).to receive(:perform_async).with(job.id)
-              put :update, params.merge(id: job.id, format: :json)
-              job.reload
-              expect(job.status).to eq "success"
-              expect(job.message).to eq "Great success"
-              expect(response).to be_successful
-            end
-          end
-
-          context "job is invalid" do
-            let(:job_params) { {message: "asd", secret: job.secret} }
-            it "does nothing" do
-              # NOTE: assigning a value to an enum (status, in this case) that
-              # isn't understood will raise ArgumentError. We must stub save to
-              # test this
-              allow(job).to receive(:save).and_return(false)
-              expect(JobsController).to_not receive(:perform_async)
-              put :update, params.merge(id: job.id, format: :json)
-              job.reload
-              expect(job.status).to eq "queued"
-            end
-          end
-        end
-
-        context "job status does not change" do
+        context "correct secret" do
           let(:job_params) do
             {
-              status: job.status,
-              message: "Something new",
+              status: "success",
+              message: "Great success",
               secret: job.secret,
             }
           end
 
-          it "saves the changes only" do
-            expect(JobStatusWorker).to_not receive(:perform_async)
+          it "updates the job" do
+            expected_job_params = job_params.slice(:status, :message)
+            expect(UpdateJob).to receive(:execute).
+              with(job: job, params: expected_job_params)
+
             put :update, params.merge(id: job.id, format: :json)
-            expect(job.reload.message).to eq "Something new"
           end
         end
       end

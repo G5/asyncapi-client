@@ -10,6 +10,7 @@ module Asyncapi::Client
           "success"=>1,
           "error"=>2,
           "timed_out"=>3,
+          "fresh" => 4,
         })
       end
     end
@@ -173,6 +174,54 @@ module Asyncapi::Client
 
     it "returns the job that have `time_out_at` set" do
       expect(Job.with_time_out).to match_array([job_1, job_2])
+    end
+  end
+
+  describe "#status" do
+    let(:job) { create(:asyncapi_client_job, status: nil) }
+
+    before do
+      job.reload # http://stackoverflow.com/a/15963359
+    end
+
+    it "starts with `fresh`" do
+      expect(job.reload.status).to eq "fresh"
+      expect(job).to be_fresh
+    end
+  end
+
+  describe "#status", "transitions" do
+    context "from `fresh`" do
+      let(:job) { create(:asyncapi_client_job, status: "fresh") }
+
+      it "executes `#queue!` to go from `fresh` to `queued`" do
+        job.enqueue!
+        expect(job).to be_queued
+      end
+
+      it "executes `#time_out!` to go from `fresh` to `timed_out`" do
+        job.time_out!
+        expect(job).to be_timed_out
+      end
+    end
+
+    context "from `queued`" do
+      let(:job) { create(:asyncapi_client_job, status: "queued") }
+
+      it "executes `#succeed!` to go from `queued` to `success`" do
+        job.succeed!
+        expect(job).to be_success
+      end
+
+      it "executes `#error!` to go from `queued` to `error`" do
+        job.fail!
+        expect(job).to be_error
+      end
+
+      it "executes `#time_out` to go from `queued` to `timed_out`" do
+        job.time_out!
+        expect(job).to be_timed_out
+      end
     end
   end
 

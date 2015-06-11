@@ -4,9 +4,34 @@ module Asyncapi::Client
     after_initialize :generate_secret
     before_create :set_expired_at
 
-    enum status: %i[queued success error timed_out]
+    enum status: %i[queued success error timed_out fresh]
     serialize :headers, Hash
     serialize :callback_params, Hash
+
+    include AASM
+    aasm column: :status, enum: true do
+      state :fresh, initial: true
+      state :queued
+      state :success
+      state :error
+      state :timed_out
+
+      event :enqueue do
+        transitions from: :fresh, to: :queued
+      end
+
+      event :succeed do
+        transitions from: :queued, to: :success
+      end
+
+      event :fail do
+        transitions from: :queued, to: :error
+      end
+
+      event :time_out do
+        transitions from: [:fresh, :queued], to: :timed_out
+      end
+    end
 
     scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
     scope :with_time_out, -> { where(arel_table[:time_out_at].not_eq(nil)) }
