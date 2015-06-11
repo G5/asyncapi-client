@@ -4,7 +4,8 @@
 - Use a secret generated in the client for the server to negotiate authentication
   - No more manual authentication needs to be done. Ensure that the `Asyncapi::Client.parent_controller` config is removed
 - Add `on_time_out` callback
-- By defualt, jobs will not time out. `time_out` must be supplied
+- By default, jobs will not time out. `time_out` must be supplied
+- The `JobTimeOutWorker` that checks for jobs that should be timed out runs every minute
 
 # 0.1.0
 
