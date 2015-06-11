@@ -130,6 +130,36 @@ module Asyncapi::Client
         expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
       end
 
+      context "time out not defined" do
+        let(:post_params) do
+          {
+            headers: {"CONTENT_TYPE" => "application/json"},
+            body: '{"json": "object"}',
+            on_queue: OnQueue,
+            on_success: OnSuccess,
+            on_error: OnError,
+            follow_up: follow_up,
+            callback_params: callback_params,
+          }
+        end
+
+        it "does not require defining time_out" do
+          post
+
+          job = described_class.last
+
+          expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
+          expect(CleanerWorker).to have_enqueued_job
+
+          expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
+          expect(job.on_queue).to eq "OnQueue"
+          expect(job.on_success).to eq "OnSuccess"
+          expect(job.on_error).to eq "OnError"
+          expect(job.callback_params).to eq({callback: "params"})
+          expect(job.body).to eq '{"json": "object"}'
+          expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
+        end
+      end
     end
 
     [:on_queue, :on_error, :on_success, :on_time_out].each do |attr|
