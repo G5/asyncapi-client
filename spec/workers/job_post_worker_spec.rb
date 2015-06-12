@@ -24,7 +24,7 @@ module Asyncapi::Client
     end
 
     context "successful response from server" do
-      context "job is successfully updated" do
+      context "job is queued and successfully updated" do
         let(:server_response) do
           double(
             success?: true,
@@ -33,9 +33,11 @@ module Asyncapi::Client
         end
 
         it "enqueues the JobStatusWorker" do
-          expect(job).to receive(:update_attributes).
-            with(server_job_url: "server/job/99", status: "queued").
+          expect(job).to receive(:assign_attributes).
+            with(server_job_url: "server/job/99").
             and_return(true)
+          expect(job).to receive(:enqueue)
+          expect(job).to receive(:save!).and_return(true)
           expect(JobStatusWorker).to receive(:perform_async).with(job.id)
           described_class.new.perform(job.id, server_url)
         end
