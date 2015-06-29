@@ -1,4 +1,4 @@
-# TBA
+# 0.2.0
 
 - Mention that `:status` is one of the attributes that should be allowed during mass assignment when using `protected_attributes`
 - Use a secret generated in the client for the server to negotiate authentication
