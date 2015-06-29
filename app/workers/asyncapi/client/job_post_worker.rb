@@ -24,7 +24,9 @@ module Asyncapi::Client
           JobStatusWorker.perform_async(job.id)
         end
       else
-        job.update_attributes(status: :error, message: response.body)
+        if job.update_attributes(status: :error, message: response.body)
+          JobStatusWorker.perform_async(job.id)
+        end
       end
     end
 

@@ -47,10 +47,24 @@ module Asyncapi::Client
     context "unsuccessful response from server" do
       let(:server_response) { double(success?: false, body: "response body") }
 
-      it "updates the job with error and the response body" do
-        expect(job).to receive(:update_attributes).
-          with(status: :error, message: "response body")
-        described_class.new.perform(job.id, server_url)
+      context "successfully updated job with error" do
+        it "updates the job with error and the response body" do
+          expect(job).to receive(:update_attributes).
+            with(status: :error, message: "response body").
+            and_return(true)
+          expect(JobStatusWorker).to receive(:perform_async).with(job.id)
+          described_class.new.perform(job.id, server_url)
+        end
+      end
+
+      context "unsuccessfuly updated job with error" do
+        it "does nothing" do
+          expect(job).to receive(:update_attributes).
+            with(status: :error, message: "response body").
+            and_return(false)
+          expect(JobStatusWorker).to_not receive(:perform_async).with(job.id)
+          described_class.new.perform(job.id, server_url)
+        end
       end
     end
 

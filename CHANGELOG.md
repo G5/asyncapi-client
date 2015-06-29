@@ -6,6 +6,7 @@
 - Add `on_time_out` callback
 - By default, jobs will not time out. `time_out` must be supplied
 - The `JobTimeOutWorker` that checks for jobs that should be timed out runs every minute
+- Trigger `JobStatusWorker` when server responds with an error
 
 # 0.1.0
 
