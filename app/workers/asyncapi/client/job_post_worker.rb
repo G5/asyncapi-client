@@ -24,7 +24,7 @@ module Asyncapi::Client
           JobStatusWorker.perform_async(job.id)
         end
       else
-        if job.update_attributes(status: :error, message: response.body)
+        if job.update_attributes(status: :error, message: response.body, response_code: response.response_code)
           JobStatusWorker.perform_async(job.id)
         end
       end
@@ -33,7 +33,7 @@ module Asyncapi::Client
     def job_params_from(response)
       response_body = JSON.parse(response.body).with_indifferent_access
       server_job_params = response_body[:job]
-      {server_job_url: server_job_params[:url]}
+      {server_job_url: server_job_params[:url], response_code: response.response_code}
     end
 
     def server_params_from(job, params)
