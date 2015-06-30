@@ -29,12 +29,13 @@ module Asyncapi::Client
           double(
             success?: true,
             body: { job: {url: "server/job/99", status: "queued"} }.to_json,
+            response_code: 200,
           )
         end
 
         it "enqueues the JobStatusWorker" do
           expect(job).to receive(:assign_attributes).
-            with(server_job_url: "server/job/99").
+            with(server_job_url: "server/job/99", response_code: 200).
             and_return(true)
           expect(job).to receive(:enqueue)
           expect(job).to receive(:save!).and_return(true)
@@ -45,12 +46,14 @@ module Asyncapi::Client
     end
 
     context "unsuccessful response from server" do
-      let(:server_response) { double(success?: false, body: "response body") }
+      let(:server_response) do
+        double(success?: false, body: "response body", response_code: 404)
+      end
 
       context "successfully updated job with error" do
         it "updates the job with error and the response body" do
           expect(job).to receive(:update_attributes).
-            with(status: :error, message: "response body").
+            with(status: :error, message: "response body", response_code: 404).
             and_return(true)
           expect(JobStatusWorker).to receive(:perform_async).with(job.id)
           described_class.new.perform(job.id, server_url)
@@ -60,7 +63,7 @@ module Asyncapi::Client
       context "unsuccessfuly updated job with error" do
         it "does nothing" do
           expect(job).to receive(:update_attributes).
-            with(status: :error, message: "response body").
+            with(status: :error, message: "response body", response_code: 404).
             and_return(false)
           expect(JobStatusWorker).to_not receive(:perform_async).with(job.id)
           described_class.new.perform(job.id, server_url)

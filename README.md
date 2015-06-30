@@ -42,7 +42,7 @@ end
 
 class DoOnError < Asyncapi::Client::CallbackRunner
   def call
-    # you have access to: job and it fields: callback_params, :body, :headers, :message
+    # you have access to: job and its fields: callback_params, :body, :headers, :message, :response_code
     Rails.logger.info "Job##{job.id} failed. The server's response: #{job.message}"
   end
 end
@@ -122,6 +122,7 @@ Asyncapi::Client::Job.attr_accessible(
   :headers,
   :body,
   :status,
+  :response_code,
 )
 ```
 

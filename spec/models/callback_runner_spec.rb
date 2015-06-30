@@ -37,15 +37,25 @@ module Asyncapi::Client
       end
     end
 
-    [:callback_params, :body, :headers, :message].each do |attr|
-      describe "#callback_params" do
-        let(:job) do
-          build_stubbed(:asyncapi_client_job, attr => "value for #{attr}")
-        end
+    describe "delegated attrs" do
+      [:callback_params, :body, :headers, :message].each do |attr|
+        describe "#{attr}" do
+          let(:job) do
+            build_stubbed(:asyncapi_client_job, attr => "value for #{attr}")
+          end
 
-        it "accesses the job's #{attr}" do
+          it "accesses the job's #{attr}" do
+            runner = runner_class.new(job.id)
+            expect(runner.send(attr)).to eq "value for #{attr}"
+          end
+        end
+      end
+
+      describe "response_code" do
+        let(:job) { build_stubbed(:asyncapi_client_job, response_code: 200) }
+        it "accesses the job's response_code" do
           runner = runner_class.new(job.id)
-          expect(runner.send(attr)).to eq "value for #{attr}"
+          expect(runner.response_code).to eq 200
         end
       end
     end

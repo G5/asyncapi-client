@@ -7,6 +7,7 @@ module Asyncapi::Client
       :body,
       :headers,
       :message,
+      :response_code,
     ]
     delegate *DELEGATED_ATTRS, to: :job
 
