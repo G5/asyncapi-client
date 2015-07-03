@@ -1,0 +1,3 @@
+class OnQueueError
+
+end
