@@ -4,7 +4,7 @@ module Asyncapi::Client
     after_initialize :generate_secret
     before_create :set_expired_at
 
-    enum status: %i[queued success error timed_out fresh]
+    enum status: %i[queued success error timed_out fresh queue_error]
     serialize :headers, Hash
     serialize :callback_params, Hash
 
@@ -15,6 +15,7 @@ module Asyncapi::Client
       state :success
       state :error
       state :timed_out
+      state :queue_error
 
       event :enqueue do
         transitions from: :fresh, to: :queued
@@ -31,6 +32,10 @@ module Asyncapi::Client
       event :time_out do
         transitions from: [:fresh, :queued], to: :timed_out
       end
+
+      event :fail_queue do
+        transitions from: :fresh, to: :queue_error
+      end
     end
 
     scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
@@ -46,6 +51,7 @@ module Asyncapi::Client
                   on_success: nil,
                   on_error: nil,
                   on_time_out: nil,
+                  on_queue_error: nil,
                   callback_params: {},
                   follow_up: 5.minutes,
                   time_out: nil)
@@ -55,6 +61,7 @@ module Asyncapi::Client
         on_queue: on_queue,
         on_success: on_success,
         on_error: on_error,
+        on_queue_error: on_queue_error,
         on_time_out: on_time_out,
         callback_params: callback_params,
         headers: headers,
@@ -75,7 +82,7 @@ module Asyncapi::Client
       write_attribute :body, json
     end
 
-    [:on_success, :on_error, :on_queue, :on_time_out].each do |attr|
+    [:on_success, :on_error, :on_queue, :on_time_out, :on_queue_error].each do |attr|
       define_method("#{attr}=") do |klass|
         write_attribute attr, klass.to_s
       end

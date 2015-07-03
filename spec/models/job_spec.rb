@@ -11,6 +11,7 @@ module Asyncapi::Client
           "error"=>2,
           "timed_out"=>3,
           "fresh" => 4,
+          "queue_error" => 5,
         })
       end
     end
@@ -26,6 +27,7 @@ module Asyncapi::Client
         on_queue: "QueuedJobWorker",
         on_success: "SuccessfulJobWorker",
         on_error: "FailedJobWorker",
+        on_queue_error: "QueueErrorWorker",
         body: '{"json": "object"}',
         headers: {"CONTENT_TYPE" => "application/json"}
       }
@@ -42,6 +44,7 @@ module Asyncapi::Client
     its(:on_queue) { is_expected.to eq "QueuedJobWorker" }
     its(:on_success) { is_expected.to eq "SuccessfulJobWorker" }
     its(:on_error) { is_expected.to eq "FailedJobWorker" }
+    its(:on_queue_error) { is_expected.to eq "QueueErrorWorker" }
     its(:headers) { is_expected.to eq({"CONTENT_TYPE" => "application/json"}) }
 
     describe ".expired" do
@@ -101,6 +104,7 @@ module Asyncapi::Client
           on_success: OnSuccess,
           on_error: OnError,
           on_time_out: OnTimeOut,
+          on_queue_error: OnQueueError,
           follow_up: follow_up,
           time_out: time_out,
           callback_params: callback_params,
@@ -138,6 +142,7 @@ module Asyncapi::Client
             on_queue: OnQueue,
             on_success: OnSuccess,
             on_error: OnError,
+            on_queue_error: OnQueueError,
             follow_up: follow_up,
             callback_params: callback_params,
           }
@@ -155,6 +160,7 @@ module Asyncapi::Client
           expect(job.on_queue).to eq "OnQueue"
           expect(job.on_success).to eq "OnSuccess"
           expect(job.on_error).to eq "OnError"
+          expect(job.on_queue_error).to eq "OnQueueError"
           expect(job.callback_params).to eq({callback: "params"})
           expect(job.body).to eq '{"json": "object"}'
           expect(job.headers).to eq({"CONTENT_TYPE" => "application/json"})
@@ -162,7 +168,7 @@ module Asyncapi::Client
       end
     end
 
-    [:on_queue, :on_error, :on_success, :on_time_out].each do |attr|
+    [:on_queue, :on_error, :on_success, :on_time_out, :on_queue_error].each do |attr|
       it "can set `#{attr}` using a class name" do
         job = build_stubbed(:asyncapi_client_job, attr => OnError)
         expect(job.send(attr)).to eq "OnError"
@@ -242,6 +248,11 @@ module Asyncapi::Client
       it "executes `#time_out!` to go from `fresh` to `timed_out`" do
         job.time_out!
         expect(job).to be_timed_out
+      end
+
+      it "executes `#fail_queue!` to go from `fresh` to `queue_error`" do
+        job.fail_queue!
+        expect(job).to be_queue_error
       end
     end
 
