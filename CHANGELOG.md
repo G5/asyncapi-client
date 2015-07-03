@@ -1,6 +1,8 @@
 # TBA
 
 - Add `Asyncapi::Client::Job#response_code`
+- Add Job `fail_queue` event that transitions from `fresh` to `queue_error`
+- Unsuccessful response in JobPostWorker triggers `fail_queue` event
 
 # 0.2.0
 
