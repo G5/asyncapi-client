@@ -98,5 +98,15 @@ module Asyncapi::Client
       self.secret ||= SecureRandom.uuid
     end
 
+    def self.initial_state
+      self.aasm.state_machine.initial_state
+    end
+
+    def self.non_initial_states
+      self.aasm.states.reject do |state|
+        state == initial_state
+      end.map(&:name)
+    end
+
   end
 end

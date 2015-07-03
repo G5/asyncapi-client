@@ -9,6 +9,7 @@ module Asyncapi::Client
       success: :on_success,
       error: :on_error,
       timed_out: :on_time_out,
+      queue_error: :on_queue_error,
     }.with_indifferent_access
 
     def perform(job_id)
