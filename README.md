@@ -17,6 +17,7 @@ Asyncapi::Client::Job.post(
   on_success: DoOnSuccess,
   on_error: DoOnError,
   on_queue: DoOnQueue,
+  on_queue_error: DoOnQueueError,
   on_time_out: DoOnTimeOut,
   time_out: 2.minutes # Defaults to nil (never time out)
 )
@@ -54,6 +55,7 @@ In the callback classes, you have access to the `job` and its fields (directly):
 - `body`
 - `headers`
 - `message`
+- `response_code`
 
 Currently, this Engine only works with [Sidekiq](http://sidekiq.org), [typhoeus](https://github.com/typhoeus/typhoeus), and [kaminari](https://github.com/amatsuda/kaminari). Customizing these can be introduced as needed.
 
@@ -119,6 +121,7 @@ Asyncapi::Client::Job.attr_accessible(
   :on_queue,
   :on_success,
   :on_error,
+  :on_queue_error,
   :headers,
   :body,
   :status,
