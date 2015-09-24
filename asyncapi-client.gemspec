@@ -18,7 +18,7 @@ Gem::Specification.new do |s|
 
   s.add_dependency "rails", "~> 4.1.5"
   s.add_dependency "sidekiq"
-  s.add_dependency "sidetiq"
+  s.add_dependency "sidekiq-cron"
   s.add_dependency "kaminari"
   s.add_dependency "api-pagination"
   s.add_dependency "typhoeus"
