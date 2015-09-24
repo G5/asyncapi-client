@@ -1,4 +1,4 @@
-# TBA
+# 0.4.0
 
 - Use `sidekiq-cron` for scheduling.
 
