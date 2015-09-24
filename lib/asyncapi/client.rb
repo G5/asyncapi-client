@@ -1,5 +1,5 @@
 require "sidekiq"
-require "sidetiq"
+require "sidekiq-cron"
 require "api-pagination"
 require "typhoeus"
 require 'aasm'

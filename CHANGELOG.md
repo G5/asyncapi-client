@@ -1,3 +1,7 @@
+# TBA
+
+- Use `sidekiq-cron` for scheduling.
+
 # 0.3.0
 
 - Add `Asyncapi::Client::Job#response_code`

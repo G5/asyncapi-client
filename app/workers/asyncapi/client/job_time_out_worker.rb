@@ -2,11 +2,8 @@ module Asyncapi::Client
   class JobTimeOutWorker
 
     include Sidekiq::Worker
-    include Sidetiq::Schedulable
 
     sidekiq_options retry: false
-
-    recurrence { minutely }
 
     def perform
       Job.for_time_out.find_each { |job| time_out_job(job) }
@@ -21,3 +18,9 @@ module Asyncapi::Client
 
   end
 end
+
+Sidekiq::Cron::Job.create({
+  name: "Expire jobs",
+  cron: "*/1 * * * *",
+  klass: "Asyncapi::Client::JobTimeOutWorker",
+})
