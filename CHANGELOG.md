@@ -4,6 +4,7 @@
 - Add Job `fail_queue` event that transitions from `fresh` to `queue_error`
 - Unsuccessful response in JobPostWorker triggers `fail_queue` event
 - Remove unneeded scope for `Job.for_time_out`. Has a small speed increase.
+- Scope `Job.for_time_out` to `fresh` and `queued` statuses because it's not possible to transition to `timed_out` from other statuses.
 
 # 0.2.0
 

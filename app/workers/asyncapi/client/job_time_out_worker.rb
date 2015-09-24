@@ -9,9 +9,7 @@ module Asyncapi::Client
     recurrence { minutely }
 
     def perform
-      Job.for_time_out.find_each do |job|
-        time_out_job(job) if job.may_time_out?
-      end
+      Job.for_time_out.find_each { |job| time_out_job(job) }
     end
 
     private
