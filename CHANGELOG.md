@@ -1,3 +1,7 @@
+# TBA
+
+- Relax Rails version to ~> 4.1
+
 # 0.4.0
 
 - Use `sidekiq-cron` for scheduling.
