@@ -15,7 +15,7 @@ module Asyncapi::Client
     def perform(job_id)
       job = Job.find(job_id)
       callback_method = STATUS_CALLBACK_MAP[job.status]
-      return unless job.respond_to?(callback_method)
+      return if callback_method.nil?
       class_name = job.send(callback_method)
       begin
         callback_class = class_name.constantize

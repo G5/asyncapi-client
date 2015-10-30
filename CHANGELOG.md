@@ -1,3 +1,8 @@
+# TBA
+
+- Relax Rails version to ~> 4.1
+- Do not use `responders` gem in controller. Lessen dependencies
+
 # 0.4.0
 
 - Use `sidekiq-cron` for scheduling.

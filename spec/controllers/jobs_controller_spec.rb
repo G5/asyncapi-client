@@ -22,11 +22,7 @@ module Asyncapi::Client
 
         context "secret is invalid" do
           let(:job_params) do
-            {
-              status: "success",
-              message: "Haxxors",
-              secret: "lala",
-            }
+            { status: "success", message: "Haxxors", secret: "lala" }
           end
 
           it "does nothing" do
@@ -38,13 +34,10 @@ module Asyncapi::Client
           end
         end
 
-        context "correct secret" do
+        context "correct secret and job is valid" do
+          let(:job) { create(:asyncapi_client_job, status: :queued) }
           let(:job_params) do
-            {
-              status: "success",
-              message: "Great success",
-              secret: job.secret,
-            }
+            { status: "success", message: "Great success", secret: job.secret }
           end
 
           it "updates the job" do
@@ -53,6 +46,7 @@ module Asyncapi::Client
               with(job: job, params: expected_job_params)
 
             put :update, params.merge(id: job.id, format: :json)
+            expect(response.status).to eq 200
           end
         end
       end
