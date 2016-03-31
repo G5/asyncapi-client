@@ -1,7 +1,7 @@
 module Asyncapi::Client
   class UpdateJob
 
-    def self.execute(job: job, params: params)
+    def self.execute(job:, params:)
       sanitized_params = params.reject { |key, value| key.to_sym == :status }
       job.assign_attributes(sanitized_params)
       status = params[:status]
