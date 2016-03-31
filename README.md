@@ -139,6 +139,13 @@ require "asyncapi/client/factories"
 
 `asyncapi-client` generates a secret for the job using `SecureRandom.uuid`, and sends this to the app using `asyncapi-server`. The server app, using the latest compatible gem, will reply with the secret in the params. `asyncapi-client` will make sure the job id matches with the given secret.
 
+# Development
+
+```
+rake app:db:schema:load
+rspec spec
+```
+
 # License
 
 Copyright (c) 2016 G5
