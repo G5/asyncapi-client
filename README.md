@@ -141,7 +141,7 @@ require "asyncapi/client/factories"
 
 ## License
 
-Copyright (c) 2014 G5
+Copyright (c) 2016 G5
 
 MIT License
 
