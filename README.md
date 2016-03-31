@@ -36,7 +36,7 @@ class DoOnQueue < Asyncapi::Client::CallbackRunner
 end
 
 class DoOnSuccess < Asyncapi::Client::CallbackRunner
-  def self.call
+  def call
     Rails.logger.info "Job##{job.id} is done. The server's response: #{job.message}"
   end
 end
