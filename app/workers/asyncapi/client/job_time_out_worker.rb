@@ -19,8 +19,10 @@ module Asyncapi::Client
   end
 end
 
-Sidekiq::Cron::Job.create({
-  name: "Expire jobs",
-  cron: "*/1 * * * *",
-  klass: "Asyncapi::Client::JobTimeOutWorker",
-})
+if Sidekiq.server?
+  Sidekiq::Cron::Job.create({
+    name: "Expire jobs",
+    cron: "*/1 * * * *",
+    klass: "Asyncapi::Client::JobTimeOutWorker",
+  })
+end
