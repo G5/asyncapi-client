@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [Unreleased]
+### Fixed
+- [Do not include redis immediately](https://github.com/G5/asyncapi-client/pull/20)
+
 ## [0.5.0] - 2016-03-31
 ### Added
 - Relax Rails version to ~> 4.1
