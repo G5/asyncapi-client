@@ -14,3 +14,11 @@ module Asyncapi
     end
   end
 end
+
+if Sidekiq.server?
+  Sidekiq::Cron::Job.create({
+    name: "Delete old jobs",
+    cron: Asyncapi::Client.clean_job_cron,
+    klass: Asyncapi::Client::CleanerWorker.name,
+  })
+end

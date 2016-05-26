@@ -121,7 +121,6 @@ module Asyncapi::Client
         job = described_class.last
 
         expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
-        expect(CleanerWorker).to have_enqueued_job
 
         expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
         expect(job.time_out_at.to_i).to eq time_out.from_now.to_i
@@ -154,7 +153,6 @@ module Asyncapi::Client
           job = described_class.last
 
           expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
-          expect(CleanerWorker).to have_enqueued_job
 
           expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
           expect(job.on_queue).to eq "OnQueue"
