@@ -29,5 +29,11 @@ module Asyncapi
       end
     end
 
+    describe ".clean_job_cron" do
+      it "defaults to '0 0 * * *'" do
+        expect(described_class.clean_job_cron).to eq "0 0 * * *"
+      end
+    end
+
   end
 end

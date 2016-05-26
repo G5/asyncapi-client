@@ -73,7 +73,13 @@ By default, jobs 10 days old and older will be deleted. You can change this sett
 Asyncapi::Client.expiry_threshold = 5.days
 ```
 
-If you don't ever want the jobs to get delete, set the threshold to `nil`.
+If you don't want the jobs to get deleted, set the threshold to `nil`.
+
+The cleaner job is run every day at "0 0 * * *". If you want to change the frequency that this runs, then:
+
+```ruby
+Asyncapi::Client.clean_job_cron = "30 2 * * *"
+```
 
 # Installation
 
