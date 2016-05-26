@@ -2,7 +2,11 @@
 
 Asyncapi::Client is a Rails engine that easily allows asynchronous communication with a [Asyncapi::Server](https://github.com/G5/asyncapi-server)-based API server.
 
-This avoids tying up your web servers executing long running processes. Scaling typically requires more workers.
+The common pattern that this gem saves you from implementing for the service callback pattern. [soapatterns.org](http://soapatterns.org/design_patterns/service_callback) describes it well, and [this image they provide](http://soapatterns.org/static/images/figures/service_callback/fig1.png) summarizes it:
+
+![Service Callback Pattern](docs/service-callback-pattern.png)
+
+Implementing this typically requires a bunch of code that looks the same: HTTP posts, receive hooks - all while the data that's passed around different.
 
 # Usage
 
@@ -23,14 +27,19 @@ Asyncapi::Client::Job.post(
 )
 ```
 
-*Jobs that should be timed out are marked as `timed_out` approximately every minute.*
+Here is a breakdown of what these parameters mean:
 
-Each of the `on_*` classes will get executed. For example, when the job is queued on the server, `DoOnQueue#call` will get called with the `Asyncapi::Client::Job` instance passed in. Example:
+- `http://server.com/long/running/process`: this is an endpoint that you will create using [Asyncapi::Server](https://github.com/G5/asyncapi-server)
+- `body`: any data you want to send to the server that's needed for it to do its work
+- `headers`: if needed, headers for authorization, for example
+- `on_success`, `on_error`, `on_*`: service objects that will get executed whenever these events occur. More on this below.
+- `time_out`: when this job should be considered timed out. This is helpful when you want to know if the server ever got to working on the job. Jobs that should be timed out are marked as `timed_out` approximately every minute.
+
+## `on_*` Callbacks
 
 ```ruby
 class DoOnQueue < Asyncapi::Client::CallbackRunner
   def call
-    # you have access to: job, callback_params
     Rails.logger.info "Job##{job.id} successfully queued with body: #{job.body}"
   end
 end
@@ -43,13 +52,12 @@ end
 
 class DoOnError < Asyncapi::Client::CallbackRunner
   def call
-    # you have access to: job and its fields: callback_params, :body, :headers, :message, :response_code
     Rails.logger.info "Job##{job.id} failed. The server's response: #{job.message}"
   end
 end
 ```
 
-In the callback classes, you have access to the `job` and its fields (directly):
+In the callback service objects, you have access to the `job` and its fields (directly):
 
 - `callback_params`
 - `body`
@@ -57,7 +65,7 @@ In the callback classes, you have access to the `job` and its fields (directly):
 - `message`
 - `response_code`
 
-Currently, this Engine only works with [Sidekiq](http://sidekiq.org), [typhoeus](https://github.com/typhoeus/typhoeus), and [kaminari](https://github.com/amatsuda/kaminari). Customizing these can be introduced as needed.
+Currently, this Engine only works with [Sidekiq](http://sidekiq.org), [typhoeus](https://github.com/typhoeus/typhoeus), and [kaminari](https://github.com/amatsuda/kaminari). Customizing these can be introduced to this gem as needed.
 
 To run the application, you need to have the Sidekiq workers running as well.
 
