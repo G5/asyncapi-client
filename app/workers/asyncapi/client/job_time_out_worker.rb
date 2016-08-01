@@ -12,7 +12,9 @@ module Asyncapi::Client
     private
 
     def time_out_job(job)
-      job.update_attributes(status: :timed_out)
+      ActiveRecord::Base.after_transaction do
+        job.update_attributes(status: :timed_out)
+      end
       JobStatusWorker.perform_async(job.id)
     end
 
