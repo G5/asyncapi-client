@@ -13,7 +13,7 @@
 
 ActiveRecord::Schema.define(version: 20150703001225) do
 
-  create_table "asyncapi_client_jobs", force: true do |t|
+  create_table "asyncapi_client_jobs", force: :cascade do |t|
     t.string   "server_job_url"
     t.integer  "status"
     t.text     "message"

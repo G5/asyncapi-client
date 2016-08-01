@@ -9,6 +9,7 @@ require "rspec/its"
 require "factory_girl"
 require "database_cleaner"
 require "pry"
+require 'rspec-sidekiq'
 
 Dir[
   File.join(SPEC_DIR, "support", "**", "*.rb"),
@@ -26,12 +27,12 @@ RSpec.configure do |config|
     DatabaseCleaner.clean_with :truncation
   end
 
-  config.before do
-    DatabaseCleaner.strategy = :transaction
+  config.before do |example|
+    DatabaseCleaner.strategy = example.metadata[:cleaning_strategy] || :transaction
     DatabaseCleaner.start
   end
 
-  config.after do
+  config.append_after(:each) do
     DatabaseCleaner.clean
   end
 
