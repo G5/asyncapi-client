@@ -156,7 +156,7 @@ require "asyncapi/client/factories"
 # Development
 
 ```
-rake app:db:schema:load
+rake db:migrate && rake db:migrate RAILS_ENV=test
 rspec spec
 ```
 
