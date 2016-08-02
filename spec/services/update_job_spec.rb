@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module Asyncapi::Client
-  describe UpdateJob, ".execute" do
+  describe UpdateJob, ".execute", cleaning_strategy: :truncation do
 
     context "from same state" do
       let(:job) { create(:asyncapi_client_job, status: "success") }

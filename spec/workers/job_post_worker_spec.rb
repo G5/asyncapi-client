@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module Asyncapi::Client
-  describe JobPostWorker, "#perform" do
+  describe JobPostWorker, "#perform", cleaning_strategy: :truncation do
 
     let(:job) do
       build_stubbed(:asyncapi_client_job, {

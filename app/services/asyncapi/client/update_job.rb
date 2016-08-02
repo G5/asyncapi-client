@@ -9,7 +9,9 @@ module Asyncapi::Client
       if may_transition?(job, to: status)
         transition(job, to: status)
         if job.status_changed? && job.save
-          JobStatusWorker.perform_async(job.id)
+          ActiveRecord::Base.after_transaction do
+            JobStatusWorker.perform_async(job.id)
+          end
         else
           job.save
         end

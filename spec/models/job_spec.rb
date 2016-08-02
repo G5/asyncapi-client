@@ -1,7 +1,7 @@
 require "spec_helper"
 
 module Asyncapi::Client
-  describe Job do
+  describe Job, cleaning_strategy: :truncation do
 
     describe "enum statuses" do
       it "is listed" do
