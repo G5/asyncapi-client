@@ -22,7 +22,7 @@ module Asyncapi::Client
       end
       let!(:job_4_never_time_out) { create(:asyncapi_client_job) }
 
-      it "times out jobs that should be timed out and runs the JobStatusWorker for them" do
+      it "times out jobs that should be timed out and runs the JobStatusWorker for them", cleaning_strategy: :truncation do
         Timecop.travel 26.minutes.from_now
 
         described_class.new.perform

@@ -3,6 +3,7 @@ require "sidekiq-cron"
 require "api-pagination"
 require "typhoeus"
 require 'aasm'
+require 'ar_after_transaction'
 require "asyncapi/client/engine"
 require "securerandom"
 
