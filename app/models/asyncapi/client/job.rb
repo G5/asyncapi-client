@@ -70,7 +70,9 @@ module Asyncapi::Client
       }
       args[:time_out_at] = time_out.from_now if time_out
       job = create(args)
-      JobPostWorker.perform_async(job.id, url)
+      ActiveRecord::Base.after_transaction do
+        JobPostWorker.perform_async(job.id, url)
+      end
     end
 
     def url

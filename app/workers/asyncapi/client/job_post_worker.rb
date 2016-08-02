@@ -21,12 +21,16 @@ module Asyncapi::Client
         job.assign_attributes(job_params_from(response))
         job.enqueue
         if job.save!
-          JobStatusWorker.perform_async(job.id)
+          ActiveRecord::Base.after_transaction do
+            JobStatusWorker.perform_async(job.id)
+          end
         end
       else
         job.fail_queue
         if job.update_attributes!(message: response.body, response_code: response.response_code)
-          JobStatusWorker.perform_async(job.id)
+          ActiveRecord::Base.after_transaction do
+            JobStatusWorker.perform_async(job.id)
+          end
         end
       end
     end
