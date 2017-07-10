@@ -55,7 +55,8 @@ module Asyncapi::Client
                   on_queue_error: nil,
                   callback_params: {},
                   follow_up: 5.minutes,
-                  time_out: nil)
+                  time_out: nil,
+                  current: nil)
 
       args = {
         follow_up_at: follow_up.from_now,
@@ -67,6 +68,7 @@ module Asyncapi::Client
         callback_params: callback_params,
         headers: headers,
         body: body,
+        current: current
       }
       args[:time_out_at] = time_out.from_now if time_out
       job = create(args)
