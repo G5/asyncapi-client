@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703001225) do
+ActiveRecord::Schema.define(version: 20170710010230) do
 
   create_table "asyncapi_client_jobs", force: :cascade do |t|
     t.string   "server_job_url"
@@ -32,6 +32,7 @@ ActiveRecord::Schema.define(version: 20150703001225) do
     t.string   "on_time_out"
     t.integer  "response_code"
     t.string   "on_queue_error"
+    t.boolean  "current"
   end
 
   add_index "asyncapi_client_jobs", ["time_out_at"], name: "index_asyncapi_client_jobs_on_time_out_at"
