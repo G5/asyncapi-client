@@ -10,7 +10,7 @@ module Asyncapi::Client
         it "returns a paginated list of jobs" do
           job_1 = create(:asyncapi_client_job)
           job_2 = create(:asyncapi_client_job)
-          get :index, per_page: 1, page: 2, format: :json
+          get :index, params: {per_page: 1, page: 2, format: :json}
           json_response = indifferent_hash(response.body)
           expect(json_response.first[:id]).to eq job_2.id
         end
@@ -27,7 +27,7 @@ module Asyncapi::Client
 
           it "does nothing" do
             expect(job).to_not receive(:save)
-            put :update, params.merge(id: job.id, format: :json)
+            put :update, params: params.merge(id: job.id, format: :json)
             job.reload
             expect(job.status).to eq "queued"
             expect(response.status).to eq 403
@@ -41,11 +41,12 @@ module Asyncapi::Client
           end
 
           it "updates the job" do
-            expected_job_params = job_params.slice(:status, :message)
+            sliced = job_params.slice(:status, :message)
+            expected_job_params = ActionController::Parameters.new(sliced).permit!
             expect(UpdateJob).to receive(:execute).
               with(job: job, params: expected_job_params)
 
-            put :update, params.merge(id: job.id, format: :json)
+            put :update, params: params.merge(id: job.id, format: :json)
             expect(response.status).to eq 200
           end
         end
