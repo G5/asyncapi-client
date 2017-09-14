@@ -1,3 +1,5 @@
+ruby '2.3.1'
+
 source "https://rubygems.org"
 
 # Declare your gem's dependencies in asyncapi_client.gemspec.
