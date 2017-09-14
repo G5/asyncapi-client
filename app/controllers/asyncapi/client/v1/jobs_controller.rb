@@ -13,7 +13,7 @@ module Asyncapi::Client
           UpdateJob.execute(job: job, params: job_params)
           render json: job
         else
-          render nothing: true, status: 403
+          head :forbidden
         end
       end
 
