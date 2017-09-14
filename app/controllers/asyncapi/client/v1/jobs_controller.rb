@@ -1,6 +1,7 @@
 module Asyncapi::Client
   module V1
     class JobsController < Asyncapi::Client.parent_controller
+      include Rails::Pagination
 
       def index
         jobs = Job.all
