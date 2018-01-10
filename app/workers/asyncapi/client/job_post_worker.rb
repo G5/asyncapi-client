@@ -42,6 +42,7 @@ module Asyncapi::Client
     end
 
     def server_params_from(job, params)
+      params = params.to_json if params.is_a? Hash
       {
         job: {
           callback_url: job.url,
