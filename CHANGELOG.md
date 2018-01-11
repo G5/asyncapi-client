@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.6.2] - 2018-01-11
+### Changed
+- Transform params into json format if data type is a Hash.
+
 ## [0.6.1] - 2016-08-02
 ### Fixed
 - Wait for db transaction to complete before enqueuing job
