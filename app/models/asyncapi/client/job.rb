@@ -69,7 +69,11 @@ module Asyncapi::Client
         body: body,
       }
       args[:time_out_at] = time_out.from_now if time_out
+      puts "##############################################################"
+      puts "Create Job"
       job = create(args)
+      puts job.body.class
+      puts "##############################################################"
       ActiveRecord::Base.after_transaction do
         JobPostWorker.perform_async(job.id, url)
       end
@@ -80,7 +84,12 @@ module Asyncapi::Client
     end
 
     def body=(body)
+      puts body
+      puts "BEFORE:: #{body.class}"
       json = body.is_a?(Hash) ? body.to_json : body
+      puts json
+      puts "AFTER:: #{json.class}"
+
       write_attribute :body, json
     end
 
