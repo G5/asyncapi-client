@@ -2,11 +2,11 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## TBA - 2018-03-08
+## TBA - 2018-04-03
 - Update ruby to 2.3.1
+- Requires a Rails 5 compatible application
 - Use `head` for header only responses
-- include Rails::Paginate for api-pagination 4.5 or higher
-- All http request in spec expects parameters to be within the :params hash
+- Remove `job#body=` method to allow for a more agnostic use
 
 ## [0.6.2] - 2018-01-11
 ### Changed
