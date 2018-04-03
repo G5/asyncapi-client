@@ -79,11 +79,6 @@ module Asyncapi::Client
       Asyncapi::Client::Engine.routes.url_helpers.v1_job_url(self)
     end
 
-    def body=(body)
-      json = body.is_a?(Hash) ? body.to_json : body
-      write_attribute :body, json
-    end
-
     [:on_success, :on_error, :on_queue, :on_time_out, :on_queue_error].each do |attr|
       define_method("#{attr}=") do |klass|
         write_attribute attr, klass.to_s

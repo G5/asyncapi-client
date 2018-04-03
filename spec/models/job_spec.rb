@@ -75,23 +75,6 @@ module Asyncapi::Client
       end
     end
 
-    describe "#body=" do
-      context "given json" do
-        it "remains as json" do
-          job = build_stubbed(:asyncapi_client_job, body: %Q({"json": "thing"}))
-          expect(JSON.parse(job.body).with_indifferent_access[:json]).
-            to eq "thing"
-        end
-      end
-
-      context "given params" do
-        it "is converted to json" do
-          job = build_stubbed(:asyncapi_client_job, body: {ruby: "hash"})
-          expect(job.body).to eq %Q({"ruby":"hash"})
-        end
-      end
-    end
-
     describe ".post" do
       before { Timecop.freeze }
       subject(:post) { described_class.post(server_url, post_params) }
