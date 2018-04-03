@@ -1,5 +1,5 @@
 module Asyncapi
   module Client
-    VERSION = "0.7.0.alpha.1"
+    VERSION = "0.7.0"
   end
 end

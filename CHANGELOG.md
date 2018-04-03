@@ -2,11 +2,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## TBA - 2018-04-03
+## [0.7.0] - 2018-04-03
+### Changed
 - Update ruby to 2.3.1
 - Requires a Rails 5 compatible application
-- Use `head` for header only responses
 - Remove `job#body=` method to allow for a more agnostic use
+### Added
+- Use `head` for header only responses
 
 ## [0.6.2] - 2018-01-11
 ### Changed
