@@ -37,6 +37,107 @@ module Asyncapi
           end
         end
 
+        context "when the remote job info is missing " do
+          let(:logger_class){ class_double("G5::Logger::Log") }
+
+          before do
+            allow(Job).to receive(:find_by).with(id: job.id).and_return(job)
+            allow(job).to receive(:destroy)
+          end
+
+          after { described_class.new.perform(job.id) }
+
+          context 'when the job is missing the server_job_url' do
+            let(:job) do
+              build_stubbed(:asyncapi_client_job, {
+                server_job_url: nil,
+                secret: "sekret",
+                headers: { AUTHORIZATION: "Bearer xyz" }
+              })
+            end
+
+            it 'deletes the given job' do
+              expect(job).to receive(:destroy)
+            end
+
+            context 'when G5::Logger::Log is defined' do
+              before do
+                stub_const("G5::Logger::Log", logger_class)
+                allow(logger_class).to receive(:send)
+              end
+
+              it 'logs a warning with the error' do
+                expect(logger_class).to receive(:send).with(:warn, {
+                  origin: "#{described_class.name}#destroy_remote",
+                  external_parent_id: "#{job.id}",
+                  message: "Not enough info to delete expired remote job: server_job_url is invalid",
+                  error: "Unable to delete remote job",
+                })
+              end
+            end
+          end
+
+          context 'when the job is missing the secret' do
+            let(:job) do
+              build_stubbed(:asyncapi_client_job, {
+                server_job_url: "https://foo.com/job/feeds",
+                secret: nil,
+                headers: { AUTHORIZATION: "Bearer xyz" }
+              })
+            end
+
+            it 'deletes the given job' do
+              expect(job).to receive(:destroy)
+            end
+
+            context 'when G5::Logger::Log is defined' do
+              before do
+                stub_const("G5::Logger::Log", logger_class)
+                allow(logger_class).to receive(:send)
+              end
+
+              it 'logs a warning with the error' do
+                expect(logger_class).to receive(:send).with(:warn, {
+                  origin: "#{described_class.name}#destroy_remote",
+                  external_parent_id: "#{job.id}",
+                  message: "Not enough info to delete expired remote job: secret is not present",
+                  error: "Unable to delete remote job",
+                })
+              end
+            end
+          end
+
+          context 'when the job is missing the authorization headers' do
+            let(:job) do
+              build_stubbed(:asyncapi_client_job, {
+                server_job_url: "https://foo.com/job/feeds",
+                secret: "foo-secret",
+                headers: { NO_AUTHORIZATION: "Bearer xyz" }
+              })
+            end
+
+            it 'deletes the given job' do
+              expect(job).to receive(:destroy)
+            end
+
+            context 'when G5::Logger::Log is defined' do
+              before do
+                stub_const("G5::Logger::Log", logger_class)
+                allow(logger_class).to receive(:send)
+              end
+
+              it 'logs a warning with the error' do
+                expect(logger_class).to receive(:send).with(:warn, {
+                  origin: "#{described_class.name}#destroy_remote",
+                  external_parent_id: "#{job.id}",
+                  message: "Not enough info to delete expired remote job: authorization headers are not present",
+                  error: "Unable to delete remote job",
+                })
+              end
+            end
+          end
+        end
+
         context "job does not exist" do
           it "does nothing" do
             expect{ described_class.new.perform(12312) }.to_not raise_error
