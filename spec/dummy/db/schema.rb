@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2015_07_03_001225) do
+ActiveRecord::Schema.define(version: 2019_02_18_200630) do
 
   create_table "asyncapi_client_jobs", force: :cascade do |t|
     t.string "server_job_url"
@@ -23,8 +23,8 @@ ActiveRecord::Schema.define(version: 2015_07_03_001225) do
     t.string "on_error"
     t.text "body"
     t.text "headers"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.text "callback_params"
     t.string "secret"
     t.datetime "expired_at"
