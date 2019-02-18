@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_02_18_200630) do
+ActiveRecord::Schema.define(version: 2015_07_03_001225) do
 
   create_table "asyncapi_client_jobs", force: :cascade do |t|
     t.string "server_job_url"

@@ -1,4 +1,4 @@
-class CreateAsyncapiClientJobs < ActiveRecord::Migration[5.0]
+class CreateAsyncapiClientJobs < ActiveRecord::Migration[4.2]
   def change
     create_table :asyncapi_client_jobs do |t|
       t.string   "server_job_url"
