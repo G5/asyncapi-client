@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.0] - 2019-02-18
+### Changed
+- Fixes jobs deletion in cleanup when there are remote job parameters missing.
+- Add a more efficient way to retrieve jobs for cleanup.
+- Update migrations to be Rails 5 compliant.
+### Added
+- Add index to jobs table on `expired_at` attribute.
+
 ## [0.7.0] - 2018-04-03
 ### Changed
 - Update ruby to 2.3.1

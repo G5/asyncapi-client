@@ -6,9 +6,7 @@ module Asyncapi
       sidekiq_options retry: false
 
       def perform
-        Job.expired.find_each do |job|
-          JobCleanerWorker.perform_async(job.id)
-        end
+        Job.expired.pluck(:id).each{ |job_id| JobCleanerWorker.perform_async(job_id) }
       end
 
     end

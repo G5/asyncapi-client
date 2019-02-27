@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,29 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150703001225) do
+ActiveRecord::Schema.define(version: 2019_02_18_200630) do
 
   create_table "asyncapi_client_jobs", force: :cascade do |t|
-    t.string   "server_job_url"
-    t.integer  "status"
-    t.text     "message"
+    t.string "server_job_url"
+    t.integer "status"
+    t.text "message"
     t.datetime "follow_up_at"
     t.datetime "time_out_at"
-    t.string   "on_queue"
-    t.string   "on_success"
-    t.string   "on_error"
-    t.text     "body"
-    t.text     "headers"
+    t.string "on_queue"
+    t.string "on_success"
+    t.string "on_error"
+    t.text "body"
+    t.text "headers"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.text     "callback_params"
-    t.string   "secret"
+    t.text "callback_params"
+    t.string "secret"
     t.datetime "expired_at"
-    t.string   "on_time_out"
-    t.integer  "response_code"
-    t.string   "on_queue_error"
+    t.string "on_time_out"
+    t.integer "response_code"
+    t.string "on_queue_error"
+    t.index ["expired_at"], name: "index_asyncapi_client_jobs_on_expired_at"
+    t.index ["time_out_at"], name: "index_asyncapi_client_jobs_on_time_out_at"
   end
-
-  add_index "asyncapi_client_jobs", ["time_out_at"], name: "index_asyncapi_client_jobs_on_time_out_at"
 
 end
