@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.8.1] - 2019-03-04
+### Removed
+- Removed index to jobs table on `expired_at` attribute, with so many updates, it is non performant.
+
 ## [0.8.0] - 2019-02-18
 ### Changed
 - Fixes jobs deletion in cleanup when there are remote job parameters missing.
