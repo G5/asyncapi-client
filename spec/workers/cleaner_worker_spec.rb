@@ -15,9 +15,9 @@ module Asyncapi
 
         described_class.new.perform
 
-        expect(JobCleanerWorker).to have_enqueued_job(deleted_job_1.id)
-        expect(JobCleanerWorker).to_not have_enqueued_job(kept_job.id)
-        expect(JobCleanerWorker).to have_enqueued_job(deleted_job_2.id)
+        expect(JobCleanerWorker).to have_enqueued_sidekiq_job(deleted_job_1.id)
+        expect(JobCleanerWorker).to_not have_enqueued_sidekiq_job(kept_job.id)
+        expect(JobCleanerWorker).to have_enqueued_sidekiq_job(deleted_job_2.id)
       end
 
     end

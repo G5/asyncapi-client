@@ -24,8 +24,14 @@ module Asyncapi
     end
 
     describe ".expiry_threshold" do
-      it "defaults to 10 days" do
-        expect(described_class.expiry_threshold).to eq 10.days
+      it "defaults to 4 days" do
+        expect(described_class.expiry_threshold).to eq 4.days
+      end
+    end
+
+    describe ".succeeded_job_deletion_threshold" do
+      it "defaults to 2 minutes" do
+        expect(described_class.succeeded_job_deletion_threshold).to eq 2.minutes
       end
     end
 

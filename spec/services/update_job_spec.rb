@@ -17,7 +17,7 @@ module Asyncapi::Client
         job.reload
 
         expect(job.message).to eq "Great success"
-        expect(JobStatusWorker).to_not have_enqueued_job(job.id)
+        expect(JobStatusWorker).to_not have_enqueued_sidekiq_job(job.id)
       end
     end
 
@@ -36,7 +36,7 @@ module Asyncapi::Client
 
         expect(job).to be_success
         expect(job.message).to eq "Great success"
-        expect(JobStatusWorker).to have_enqueued_job(job.id)
+        expect(JobStatusWorker).to have_enqueued_sidekiq_job(job.id)
       end
 
       it "can mark it as error" do
@@ -51,7 +51,7 @@ module Asyncapi::Client
 
         expect(job).to be_error
         expect(job.message).to eq "Failure there"
-        expect(JobStatusWorker).to have_enqueued_job(job.id)
+        expect(JobStatusWorker).to have_enqueued_sidekiq_job(job.id)
       end
     end
 
@@ -72,7 +72,7 @@ module Asyncapi::Client
 
         expect(job).to be_success
         expect(job.message).to eq "Ok"
-        expect(JobStatusWorker).to_not have_enqueued_job
+        expect(JobStatusWorker).to_not have_enqueued_sidekiq_job
       end
     end
 

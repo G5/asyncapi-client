@@ -31,7 +31,7 @@ module Asyncapi::Client
         expect(job_2_timed_out.reload.status).to eq "timed_out"
         expect(job_3_successful.reload.status).to eq "success"
         expect(job_4_never_time_out.reload.status).to_not eq "timed_out"
-        expect(JobStatusWorker).to have_enqueued_job(job_2_timed_out.id)
+        expect(JobStatusWorker).to have_enqueued_sidekiq_job(job_2_timed_out.id)
       end
     end
 

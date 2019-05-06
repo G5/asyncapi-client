@@ -98,12 +98,12 @@ module Asyncapi::Client
       let(:server_url)  { "http://server_url.com" }
       let(:callback_params) { {callback: "params"} }
 
-      it "creates a job, delegates it to a JobPostWorker, and runs a cleanup job" do
+      it "creates a job, delegates it to a JobPostWorker" do
         post
 
         job = described_class.last
 
-        expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
+        expect(JobPostWorker).to have_enqueued_sidekiq_job(job.id, server_url)
 
         expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
         expect(job.time_out_at.to_i).to eq time_out.from_now.to_i
@@ -135,7 +135,7 @@ module Asyncapi::Client
 
           job = described_class.last
 
-          expect(JobPostWorker).to have_enqueued_job(job.id, server_url)
+          expect(JobPostWorker).to have_enqueued_sidekiq_job(job.id, server_url)
 
           expect(job.follow_up_at.to_i).to eq follow_up.from_now.to_i
           expect(job.on_queue).to eq "OnQueue"
@@ -269,4 +269,18 @@ module Asyncapi::Client
     end
   end
 
+  describe 'deletion of job after success' do
+    let(:job) { create(:asyncapi_client_job, status: "queued") }
+
+    it 'schedules a cleanup job for this job after success' do
+      job.succeed!
+      expect(JobCleanerWorker).to have_enqueued_sidekiq_job(job.id).in(Asyncapi::Client.succeeded_job_deletion_threshold)
+    end
+
+    context 'when the job is not in success state' do
+      it 'does\'t schedule a deletion job' do
+        expect(JobCleanerWorker).to_not have_enqueued_sidekiq_job(job.id)
+      end
+    end
+  end
 end
