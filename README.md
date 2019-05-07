@@ -73,9 +73,11 @@ There is a feed of all jobs that can be accessed via `/asyncapi/client/v1/jobs.j
 
 ## Expiry
 
-To make space in the database, old jobs must be deleted. By default, jobs older than 10 days will be deleted in both the Asyncapi Client and Asyncapi Server. Asyncapi Client is responsible for deleting the jobs it no longer needs a response from on the server.
+To make space in the database, old jobs must be deleted. By default, jobs older than 4 days will be deleted in both the Asyncapi Client and Asyncapi Server. Asyncapi Client is responsible for deleting the jobs it no longer needs a response from on the server.
 
-By default, jobs 10 days old and older will be deleted. You can change this setting by putting this in an initializer:
+**Important:** keep in mind that this setting may conflict with the `successful_jobs_deletion_after` setting with jobs in `success` state, which normally are deleted after they reach this state (see [Successful jobs automatic deletion](#successful-jobs-automatic-deletion) for more information).
+
+By default, jobs 4 days old and older will be deleted. You can change this setting by putting this in an initializer:
 
 ```ruby
 Asyncapi::Client.expiry_threshold = 5.days
@@ -88,6 +90,16 @@ The cleaner job is run every day at "0 0 * * *". If you want to change the frequ
 ```ruby
 Asyncapi::Client.clean_job_cron = "30 2 * * *"
 ```
+
+## Successful jobs automatic deletion
+
+After a job completes successfully, we schedule another job to delete it after a brief period of time to avoid having a lot of records on the table. By default, a successful job is deleted from the table after 2 minutes, ignoring the `expiry_threshold` configuration option. You can change this setting using the `successful_jobs_deletion_after` configuration option in an initializer if you want to extend or shorten the wait time for deletion:
+
+```ruby
+Asyncapi::Client.successful_jobs_deletion_after = 3.days
+```
+
+**Important:** if you want to ignore `successful_jobs_deletion_after` setting in favor of `expiry_threshold`, set `successful_jobs_deletion_after` to a value greater than `expiry_threshold`.
 
 # Installation
 

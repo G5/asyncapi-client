@@ -274,7 +274,7 @@ module Asyncapi::Client
 
     it 'schedules a cleanup job for this job after success' do
       job.succeed!
-      expect(JobCleanerWorker).to have_enqueued_sidekiq_job(job.id).in(Asyncapi::Client.succeeded_job_deletion_threshold)
+      expect(JobCleanerWorker).to have_enqueued_sidekiq_job(job.id).in(Asyncapi::Client.successful_jobs_deletion_after)
     end
 
     context 'when the job is not in success state' do

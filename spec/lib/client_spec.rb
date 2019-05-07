@@ -29,9 +29,9 @@ module Asyncapi
       end
     end
 
-    describe ".succeeded_job_deletion_threshold" do
+    describe ".successful_jobs_deletion_after" do
       it "defaults to 2 minutes" do
-        expect(described_class.succeeded_job_deletion_threshold).to eq 2.minutes
+        expect(described_class.successful_jobs_deletion_after).to eq 2.minutes
       end
     end
 

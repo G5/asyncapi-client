@@ -90,7 +90,7 @@ module Asyncapi::Client
     def schedule_for_deletion
       if success?
         # delete in a couple of minutes, giving time for the success to be broadcasted
-        JobCleanerWorker.perform_in(Asyncapi::Client.succeeded_job_deletion_threshold, self.id)
+        JobCleanerWorker.perform_in(Asyncapi::Client.successful_jobs_deletion_after, self.id)
       end
     end
 
