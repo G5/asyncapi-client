@@ -2,7 +2,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## TBD [0.9.0-alpha.1] - 2019-05-05
+## [0.9.0] - 2019-06-19
 ### Added
 - Added `successful_jobs_deletion_after` configuration option to set the time after a succeeded job should be deleted.
 - Jobs now schedule a cleanup job to delete themselves in `successful_jobs_deletion_after`-time after succees.
