@@ -21,7 +21,7 @@ module Asyncapi::Client
         transitions from: :fresh, to: :queued
       end
 
-      event :succeed do
+      event :succeed, after: :schedule_for_deletion do
         transitions from: :queued, to: :success
       end
 
@@ -86,6 +86,13 @@ module Asyncapi::Client
     end
 
     private
+
+    def schedule_for_deletion
+      if success?
+        # delete in a couple of minutes, giving time for the success to be broadcasted
+        JobCleanerWorker.perform_in(Asyncapi::Client.successful_jobs_deletion_after, self.id)
+      end
+    end
 
     def set_expired_at
       self.expired_at ||= Asyncapi::Client.expiry_threshold.from_now

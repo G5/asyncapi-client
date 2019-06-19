@@ -10,9 +10,10 @@ require "securerandom"
 module Asyncapi
   module Client
 
-    CONFIG_ATTRS = %i[parent_controller expiry_threshold clean_job_cron]
+    CONFIG_ATTRS = %i[parent_controller expiry_threshold clean_job_cron successful_jobs_deletion_after]
     mattr_accessor(*CONFIG_ATTRS)
-    self.expiry_threshold = 10.days
+    self.expiry_threshold = 4.days
+    self.successful_jobs_deletion_after = 2.minutes
     self.clean_job_cron = "0 0 * * *"
 
     def self.configure

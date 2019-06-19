@@ -2,6 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## TBD [0.9.0-alpha.1] - 2019-05-05
+### Added
+- Added `successful_jobs_deletion_after` configuration option to set the time after a succeeded job should be deleted.
+- Jobs now schedule a cleanup job to delete themselves in `successful_jobs_deletion_after`-time after succees.
+
+### Changed
+- Replaced occurrences of `have_enqueued_job` to `have_enqueued_sidekiq_job` in specs to avoid deprecation notices and name clashes with ActiveJob.
+
 ## [0.8.1] - 2019-03-04
 ### Removed
 - Removed index to jobs table on `expired_at` attribute, with so many updates, it is non performant.
