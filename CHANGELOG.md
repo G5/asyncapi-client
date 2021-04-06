@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.10.0] - 2021-04-06
+### Changed
+- Add scope for stale queued jobs
+
 ## [0.9.0] - 2019-06-19
 ### Added
 - Added `successful_jobs_deletion_after` configuration option to set the time after a succeeded job should be deleted.
