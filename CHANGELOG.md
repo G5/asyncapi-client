@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## TBD [0.10.1] - 2021-04-14
+### Changed
+- Explicitly skip `#authenticate_user` check for `JobsController#update`. This is already the case since `#report_job_status` from `Asyncapi::Server` does not make an effort to secure any form of secure token/authorization.
+
 ## [0.10.0] - 2021-01-20
 ### Changed
 - Update Ruby to 2.6.5

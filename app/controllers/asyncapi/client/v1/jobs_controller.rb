@@ -2,6 +2,7 @@ module Asyncapi::Client
   module V1
     class JobsController < Asyncapi::Client.parent_controller
       include Rails::Pagination
+      skip_before_action :authenticate_user!, only: :update
 
       def index
         jobs = Job.all
