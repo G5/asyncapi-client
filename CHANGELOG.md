@@ -2,9 +2,14 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-## [0.10.0] - 2021-04-06
+## [0.11.0-alpha.01] - 2021-06-08
 ### Changed
 - Add scope for stale queued jobs
+
+## [0.10.0] - 2021-01-20
+### Changed
+- Update Ruby to 2.6.5
+- Requires a Rails 6-compatible application
 
 ## [0.9.0] - 2019-06-19
 ### Added
