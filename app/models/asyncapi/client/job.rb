@@ -40,6 +40,10 @@ module Asyncapi::Client
 
     scope :expired, -> { where(arel_table[:expired_at].lt(Time.now)) }
     scope :with_time_out, -> { where(arel_table[:time_out_at].not_eq(nil)) }
+    scope :stale, -> (stale_duration = 5) do
+      where(arel_table[:updated_at].lteq(stale_duration.minutes.ago)).
+      where(status: statuses[:queued])
+    end
     scope :for_time_out, -> do
       where(arel_table[:time_out_at].lt(Time.now)).
       where(status: [statuses[:queued], statuses[:fresh]])

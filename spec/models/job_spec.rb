@@ -194,6 +194,32 @@ module Asyncapi::Client
     end
   end
 
+
+  describe ".stale" do
+    let!(:stale_job) do
+      create(:asyncapi_client_job, updated_at: 5.minutes.ago, status: 'queued')
+    end
+    let!(:older_job) do
+      create(:asyncapi_client_job, updated_at: 10.minutes.ago, status: 'queued')
+    end
+    let!(:new_job) do
+      create(:asyncapi_client_job, updated_at: Time.current, status: 'queued')
+    end
+    let!(:fresh_job) do
+      create(:asyncapi_client_job, updated_at: 5.minutes.ago, status: 'fresh')
+    end
+
+    it "returns queued jobs that has not been updated for the last n minutes" do
+      expect(Job.stale).to match_array([stale_job, older_job])
+    end
+
+    context "when stale_duration is overriden" do
+      it "returns queued jobs that has not been updated for the last stale_duration minutes" do
+        expect(Job.stale(10)).to match_array([older_job])
+      end
+    end
+  end
+
   describe ".for_time_out" do
     let!(:job_1) do
       create(:asyncapi_client_job, time_out_at: 1.minute.ago, status: 'fresh')
