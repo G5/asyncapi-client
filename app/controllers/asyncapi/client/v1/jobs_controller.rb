@@ -3,6 +3,8 @@ module Asyncapi::Client
     class JobsController < Asyncapi::Client.parent_controller
       include Rails::Pagination
 
+      skip_before_action :verify_authenticity_token, raise: false
+
       def index
         jobs = Job.all
         paginate json: jobs
