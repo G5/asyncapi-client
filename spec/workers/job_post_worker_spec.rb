@@ -53,7 +53,7 @@ module Asyncapi::Client
       context "successfully updated job with error" do
         it "updates the job with error and the response body" do
           expect(job).to receive(:fail_queue)
-          expect(job).to receive(:update_attributes!).
+          expect(job).to receive(:update!).
             with(message: "response body", response_code: 404).
             and_return(true)
           expect(JobStatusWorker).to receive(:perform_async).with(job.id)
@@ -64,7 +64,7 @@ module Asyncapi::Client
       context "unsuccessfuly updated job with error" do
         it "does nothing" do
           expect(job).to receive(:fail_queue)
-          expect(job).to receive(:update_attributes!).
+          expect(job).to receive(:update!).
             with(message: "response body", response_code: 404).
             and_return(false)
           expect(JobStatusWorker).to_not receive(:perform_async).with(job.id)
