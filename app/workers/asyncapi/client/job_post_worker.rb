@@ -27,7 +27,7 @@ module Asyncapi::Client
         end
       else
         job.fail_queue
-        if job.update_attributes!(message: response.body, response_code: response.response_code)
+        if job.update!(message: response.body, response_code: response.response_code)
           ActiveRecord::Base.after_transaction do
             JobStatusWorker.perform_async(job.id)
           end
