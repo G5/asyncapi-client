@@ -3,7 +3,6 @@ module Asyncapi
     class JobCleanerWorker
 
       include Sidekiq::Worker
-      sidekiq_options retry: false
 
       def perform(job_id)
         if job = Job.find_by(id: job_id)
@@ -17,12 +16,14 @@ module Asyncapi
       def destroy_remote(job)
         errors = validate_remote_job_info(job)
         if errors.empty?
-          Typhoeus.delete(job.server_job_url, {
+          response = Typhoeus.delete(job.server_job_url, {
             params: { secret: job.secret },
             headers: job.headers,
           })
+
+          raise response.body unless response.success?
         else
-          log_remote_error_for(job, errors)
+          raise log_remote_error_for(job, errors)
         end
       end
 
@@ -46,14 +47,12 @@ module Asyncapi
       end
 
       def log_remote_error_for(job, errors)
-        if defined?(G5::Logger::Log)
-          G5::Logger::Log.send(:warn, {
-            origin: "#{self.class.name}#destroy_remote",
-            external_parent_id: "#{job.id}",
-            message: "Not enough info to delete expired remote job: #{errors.join(", ")}",
-            error: "Unable to delete remote job",
-          })
-        end
+        [
+          "origin: #{self.class.name}#destroy_remote",
+          "external_parent_id: #{job.id}",
+          "message: Not enough info to delete expired remote job: #{errors.join(", ")}",
+          "error: Unable to delete remote job",
+        ].join(',')
       end
     end
   end
