@@ -19,7 +19,7 @@ module Asyncapi::Client
     before do
       allow(Job).to receive(:find).with(job.id).and_return(job)
       allow(Typhoeus).to receive(:post).
-        with(server_url, body: server_params, headers: headers).
+        with(server_url, timeout: 60, connecttimeout: 60, body: server_params, headers: headers).
         and_return(server_response)
     end
 
