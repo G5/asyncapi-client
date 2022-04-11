@@ -8,7 +8,7 @@ module Asyncapi::Client
       job = Job.find(job_id)
       server_params = server_params_from(job, job.body)
       response = Typhoeus.post(server_url, {
-        timeout: 60,
+        timeout: 3600,
         connecttimeout: 60,
         body: server_params,
         headers: job.headers,
