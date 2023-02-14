@@ -50,6 +50,7 @@ module Asyncapi::Client
     end
 
     def self.post(url,
+                  kwargs ={ 
                   headers: nil,
                   body: nil,
                   on_queue: nil,
@@ -59,20 +60,20 @@ module Asyncapi::Client
                   on_queue_error: nil,
                   callback_params: {},
                   follow_up: 5.minutes,
-                  time_out: nil)
+                  time_out: nil})
 
       args = {
-        follow_up_at: follow_up.from_now,
-        on_queue: on_queue,
-        on_success: on_success,
-        on_error: on_error,
-        on_queue_error: on_queue_error,
-        on_time_out: on_time_out,
-        callback_params: callback_params,
-        headers: headers,
-        body: body,
+        follow_up_at: kwargs[:follow_up].from_now,
+        on_queue: kwargs[:on_queue],
+        on_success: kwargs[:on_success],
+        on_error: kwargs[:on_error],
+        on_queue_error: kwargs[:on_queue_error],
+        on_time_out: kwargs[:on_time_out],
+        callback_params: kwargs[:callback_params],
+        headers: kwargs[:headers],
+        body: kwargs[:body],
       }
-      args[:time_out_at] = time_out.from_now if time_out
+      args[:time_out_at] = kwargs[:time_out].from_now if kwargs[:time_out]
       job = create(args)
       ActiveRecord::Base.after_transaction do
         JobPostWorker.perform_async(job.id, url)
