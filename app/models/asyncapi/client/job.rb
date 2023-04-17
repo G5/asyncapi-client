@@ -63,7 +63,7 @@ module Asyncapi::Client
                   time_out: nil})
 
       args = {
-        follow_up_at: kwargs[:follow_up].from_now,
+        follow_up_at: kwargs[:follow_up].nil? ? 5.minutes.from_now : kwargs[:follow_up].from_now,
         on_queue: kwargs[:on_queue],
         on_success: kwargs[:on_success],
         on_error: kwargs[:on_error],
