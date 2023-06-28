@@ -7,10 +7,10 @@ module Asyncapi::Client
     def perform(job_id, server_url)
       job = Job.find(job_id)
       server_params = server_params_from(job, job.body)
-      response = Typhoeus.post(server_url, {
+      response = Typhoeus.post(server_url, 
         body: server_params,
         headers: job.headers,
-      })
+      )
       process response, job
     end
 

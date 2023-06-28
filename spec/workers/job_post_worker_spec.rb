@@ -35,7 +35,7 @@ module Asyncapi::Client
 
         it "enqueues the JobStatusWorker" do
           expect(job).to receive(:assign_attributes).
-            with(server_job_url: "server/job/99", response_code: 200).
+            with({server_job_url: "server/job/99", response_code: 200}).
             and_return(true)
           expect(job).to receive(:enqueue)
           expect(job).to receive(:save!).and_return(true)
