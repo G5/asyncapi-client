@@ -29,7 +29,6 @@ module Asyncapi
 
       def validate_remote_job_info(job)
         errors = []
-        # errors << "server_job_url is invalid"         unless url_ok_for?(job)
         errors << "authorization headers are not present" unless headers_ok_for?(job)
         errors << "secret is not present"                unless job.secret.present?
         errors
