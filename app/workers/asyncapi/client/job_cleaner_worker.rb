@@ -14,6 +14,9 @@ module Asyncapi
       private
 
       def destroy_remote(job)
+        # Typhoeus needs a server_job_url to destroy a job, but if a job for whatever reason does not have one
+        # it will never be destroyed and the sidekiq queue will just fill up and keep retrying
+        return unless url_ok_for?(job) #TO DO getting a lot of errors from jobs with no server_job_url so we need to figure out how those invalid jobs are getting created
         errors = validate_remote_job_info(job)
         if errors.empty?
           response = Typhoeus.delete(job.server_job_url, {
