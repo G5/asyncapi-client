@@ -1,5 +1,5 @@
 module Asyncapi
   module Client
-    VERSION = "0.12.2".freeze
+    VERSION = "0.12.3.pre.1".freeze
   end
 end
