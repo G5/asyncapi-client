@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib,spec/factories}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 7"
+  s.add_dependency "rails", "> 6"
   s.add_dependency "sidekiq"
   s.add_dependency "sidekiq-cron"
   s.add_dependency "kaminari"
