@@ -14,29 +14,26 @@ module Asyncapi
       private
 
       def destroy_remote(job)
-        # Typhoeus needs a server_job_url to destroy a job, but if a job for whatever reason does not have one
-        # it will never be destroyed and the sidekiq queue will just fill up and keep retrying
-        return unless url_ok_for?(job) #TO DO getting a lot of errors from jobs with no server_job_url so we need to figure out how those invalid jobs are getting created
-        errors = validate_remote_job_info(job)
-        if errors.empty?
-          response = Typhoeus.delete(job.server_job_url, {
-            params: { secret: job.secret },
-            headers: job.headers,
-          })
+        # if the job is invalid- we don't care, just destroy the invalid job
+        return unless url_ok_for?(job) && headers_ok_for?(job) && job.secret.present?
+        
+        response = Typhoeus.delete(job.server_job_url, {
+          params: { secret: job.secret },
+          headers: job.headers,
+        })
 
-          raise response.body unless response.success?
-        else
-          raise log_remote_error_for(job, errors)
-        end
+        raise response.body unless response.success?
       end
 
-      def validate_remote_job_info(job)
-        errors = []
-        errors << "server_job_url is invalid"         unless url_ok_for?(job)
-        errors << "authorization headers are not present" unless headers_ok_for?(job)
-        errors << "secret is not present"                unless job.secret.present?
-        errors
-      end
+      # stopping raising errors if the job is invalid- we don't care, just destroy the invalid job
+
+      # def validate_remote_job_info(job)
+      #   errors = []
+      #   errors << "server_job_url is invalid"         unless url_ok_for?(job)
+      #   errors << "authorization headers are not present" unless headers_ok_for?(job)
+      #   errors << "secret is not present"                unless job.secret.present?
+      #   errors
+      # end
 
       def url_ok_for?(job)
         uri = URI.parse(job.server_job_url)
