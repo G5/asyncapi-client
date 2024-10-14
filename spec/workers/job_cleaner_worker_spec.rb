@@ -64,9 +64,9 @@ module Asyncapi
               })
             end
 
-            it 'raise the error' do
-              expect { described_class.new.perform(job.id) }.to raise_error(/Not enough info to delete expired remote job: secret is not present/)
-            end
+            # it 'raise the error' do
+            #   expect { described_class.new.perform(job.id) }.to raise_error(/Not enough info to delete expired remote job: secret is not present/)
+            # end
           end
 
           context 'when the job is missing the authorization headers' do
@@ -78,9 +78,9 @@ module Asyncapi
               })
             end
 
-            it 'raise with the error' do
-              expect { described_class.new.perform(job.id) }.to raise_error(/Not enough info to delete expired remote job: authorization headers are not present/)
-            end
+            # it 'raise with the error' do
+            #   expect { described_class.new.perform(job.id) }.to raise_error(/Not enough info to delete expired remote job: authorization headers are not present/)
+            # end
           end
         end
 

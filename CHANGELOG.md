@@ -2,6 +2,10 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+## [0.12.3] 
+### Changed
+- Rails 7 friendliness
+
 ## [0.12.2] 
 ### Changed
 - Remove validation for job server url for destruction of a job

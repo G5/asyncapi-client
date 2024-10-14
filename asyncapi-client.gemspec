@@ -16,7 +16,7 @@ Gem::Specification.new do |s|
 
   s.files = Dir["{app,config,db,lib,spec/factories}/**/*", "MIT-LICENSE", "Rakefile", "README.md"]
 
-  s.add_dependency "rails", "~> 6.0"
+  s.add_dependency "rails", "> 6"
   s.add_dependency "sidekiq"
   s.add_dependency "sidekiq-cron"
   s.add_dependency "kaminari"
@@ -24,7 +24,7 @@ Gem::Specification.new do |s|
   s.add_dependency "typhoeus"
   s.add_dependency "aasm", ">= 4.0"
   s.add_dependency "ar_after_transaction"
-  s.add_dependency "sprockets", "<4"
+  s.add_dependency "sprockets-rails"
 
   s.add_development_dependency "sqlite3", '~> 1.4.2'
   s.add_development_dependency "rspec-rails"
