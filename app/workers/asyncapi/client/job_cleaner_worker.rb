@@ -22,7 +22,7 @@ module Asyncapi
           headers: job.headers,
         })
 
-        raise response.body unless response.success?
+        # raise response.body unless response.success?
       end
 
       # stopping raising errors if the job is invalid- we don't care, just destroy the invalid job
