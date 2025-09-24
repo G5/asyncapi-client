@@ -25,8 +25,8 @@ Gem::Specification.new do |s|
   s.add_dependency "aasm"
   s.add_dependency "ar_after_transaction"
   s.add_dependency "sprockets-rails"
+  s.add_dependency "pg"
 
-  s.add_development_dependency "pg"
   s.add_development_dependency "rspec-rails"
   s.add_development_dependency "rspec-its"
   s.add_development_dependency "pry"
