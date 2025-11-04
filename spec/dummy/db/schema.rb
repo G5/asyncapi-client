@@ -10,28 +10,29 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_03_04_200630) do
+ActiveRecord::Schema[7.2].define(version: 2019_03_04_200630) do
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
 
-  create_table "asyncapi_client_jobs", force: :cascade do |t|
+  create_table "asyncapi_client_jobs", id: :serial, force: :cascade do |t|
     t.string "server_job_url"
     t.integer "status"
     t.text "message"
-    t.datetime "follow_up_at"
-    t.datetime "time_out_at"
+    t.datetime "follow_up_at", precision: nil
+    t.datetime "time_out_at", precision: nil
     t.string "on_queue"
     t.string "on_success"
     t.string "on_error"
     t.text "body"
     t.text "headers"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", precision: nil
+    t.datetime "updated_at", precision: nil
     t.text "callback_params"
     t.string "secret"
-    t.datetime "expired_at"
+    t.datetime "expired_at", precision: nil
     t.string "on_time_out"
     t.integer "response_code"
     t.string "on_queue_error"
     t.index ["time_out_at"], name: "index_asyncapi_client_jobs_on_time_out_at"
   end
-
 end

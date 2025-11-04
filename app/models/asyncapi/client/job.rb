@@ -5,8 +5,8 @@ module Asyncapi::Client
     before_create :set_expired_at
 
     enum status: %i[queued success error timed_out fresh queue_error]
-    serialize :headers, Hash
-    serialize :callback_params, Hash
+    serialize :headers
+    serialize :callback_params
 
     include AASM
     aasm column: :status, enum: true do

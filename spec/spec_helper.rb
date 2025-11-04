@@ -1,12 +1,11 @@
 ENV["RAILS_ENV"] ||= "test"
 SPEC_DIR = File.dirname(__FILE__)
 DUMMY_DIR = File.join(SPEC_DIR, "dummy")
-
 require File.join(DUMMY_DIR, "config", "environment")
 require "dummy/config/environment"
 require "rspec/rails"
 require "rspec/its"
-require "factory_girl"
+require "factory_bot"
 require "database_cleaner"
 require "pry"
 require 'rspec-sidekiq'
@@ -18,7 +17,6 @@ Dir[
 ].each {|f| require f}
 
 RSpec.configure do |config|
-  config.fixture_path = "#{::Rails.root}/spec/fixtures"
   config.use_transactional_fixtures = false
   config.infer_base_class_for_anonymous_controllers = false
   config.order = "random"
