@@ -4,7 +4,7 @@ module Asyncapi::Client
     after_initialize :generate_secret
     before_create :set_expired_at
 
-    enum status: %i[queued success error timed_out fresh queue_error]
+    enum :status, %i[queued success error timed_out fresh queue_error]
     serialize :headers
     serialize :callback_params
 
